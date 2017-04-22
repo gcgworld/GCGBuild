@@ -1,0 +1,16 @@
+## sources.list => Contains list of source repositories for the package manager.
+/etc/apt/sources.list
+
+## autofs.conf 
+/etc/init/autofs.conf
+
+## Fstab (File Systems Table) "Partitions and Permissions"
+/etc/fstab
+
+## Block designated kernel modules.
+/etc/modprobe.d/GCG.conf
+
+
+
+## Sysctl (The big one.)
+/etc/sysctl.conf

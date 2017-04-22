@@ -1,0 +1,12 @@
+## Partition scheme
+For a 250gb HD
+210
+/					32gb 	12.8%
+/boot				1gb		0.4%
+/home				175gb	70%
+swap				6gb		2.4%
+/tmp				12gb	4.8%
+/var				12gb	4.8%
+/var/tmp			4gb		1.6%
+/var/log			4gb		1.6%
+/var/log/audit		4gb		1.6%

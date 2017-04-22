@@ -1,0 +1,23 @@
+# /tmp should reside on it's own partition
+tmpfs on /tmp type tmpfs (rw,nosuid,nodev,noexec,relatime)
+
+# /var should reside on it's own partition
+/dev/xvdg1 on /var type ext4 (rw,relatime,data=ordered)
+
+# /var/tmp should reside on it's own partition
+tmpfs on /var/tmp type ext4 (rw,nosuid,nodev,noexec,relatime)
+
+# /var/log should reside on it's own partition
+/dev/xvdh1 on /var/log type ext4 (rw,relatime,data=ordered)
+
+# /var/log/audit should reside on it's own partition
+/dev/xvdi1 on /var/log/audit type ext4 (rw,relatime,data=ordered)
+
+# /home should reside on it's own partition
+/dev/xvdf1 on /home type ext4 (rw,nodev,relatime,data=ordered)
+
+# /run/shm should reside on it's own partition
+tmpfs on /run/shm type tmpfs (rw,nosuid,nodev,noexec,relatime)
+
+# Removable Media Options
+nodev,nsuid,noexec

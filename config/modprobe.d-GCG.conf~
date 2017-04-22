@@ -1,0 +1,34 @@
+## File systems.
+install cramfs /bin/true
+install freevxfs /bin/true
+install jffs2 /bin/true
+install hfs /bin/true
+install hfsplus /bin/true
+# install squashfs /bin/true
+install udf /bin/true
+install vfat /bin/true
+
+## Kernel modules.
+install bluetooth /bin/true
+install bnep /bin/true
+install ene_ir /bin/true
+install ideapad_laptop /bin/true
+install joydev /bin/true
+install rfcomm /bin/true
+install snd /bin/true
+install snd_hda_codec /bin/true
+install snd_hda_codec_conexant /bin/true
+install snd_hda_codec_generic /bin/true
+install snd_hda_codec_hdmi /bin/true
+install snd_hda_intel /bin/true
+install snd_hwdep /bin/true
+install snd_pcm /bin/true
+install snd_rawmidi /bin/true
+install snd_seq /bin/true
+install snd_seq_device /bin/true
+install snd_seq_midi /bin/true
+install snd_seq_midi_event /bin/true
+install snd_timer /bin/true
+install soundcore /bin/true
+
+

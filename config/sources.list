@@ -1,0 +1,31 @@
+## Make sure your sources are configured for https
+deb https://__XX__XX__.com/ubuntu trusty main restricted
+deb-src https://__XX__XX__.com/ubuntu trusty main restricted
+
+deb https://__XX__XX__.com/ubuntu trusty-updates main restricted
+deb-src https://__XX__XX__.com/ubuntu trusty-updates main restricted
+
+deb https://__XX__XX__.com/ubuntu trusty universe
+deb-src https://__XX__XX__.com/ubuntu trusty universe
+
+deb https://__XX__XX__.com/ubuntu trusty-updates universe
+deb-src https://__XX__XX__.com/ubuntu trusty-updates universe
+
+deb https://__XX__XX__.com/ubuntu trusty multiverse
+deb-src https://__XX__XX__.com/ubuntu trusty multiverse
+
+deb https://__XX__XX__.com/ubuntu trusty-updates multiverse
+deb-src https://__XX__XX__.com/ubuntu trusty-updates multiverse
+
+deb https://__XX__XX__.com/ubuntu trusty-backports main restricted universe multiverse
+deb-src https://__XX__XX__.com/ubuntu trusty-backports main restricted universe multiverse
+
+deb https://__XX__XX__.com/ubuntu trusty-updates main restricted
+deb-src https://__XX__XX__.com/ubuntu trusty-updates main restricted
+
+deb https://__XX__XX__.com/ubuntu trusty-security main restricted
+deb-src https://__XX__XX__.com/ubuntu trusty-security main restricted
+deb https://__XX__XX__.com/ubuntu trusty-security universe
+deb-src https://__XX__XX__.com/ubuntu trusty-security universe
+deb https://__XX__XX__.com/ubuntu trusty-security multiverse
+deb-src https://__XX__XX__.com/ubuntu trusty-security multiverse
