@@ -1,75 +1,6 @@
 #!/bin/bash
-  ____________________________________________________________
- #]##########################################################|
- #|                                                         #|
- #|                   GCGLinux Prototype                    #|
- #|         Setting Up Your Dev-Box/Server on Metal         #|
- #|_________________________________________________________#|
- #]##########################################################]
-   
-## If you run your own shit, you're going to learn a lot while
-## you get your ass kicked.
 
-
-## -1) Run as root.
-
-
-
-## 6) Secure GRUB
-# chown root:root /boot/grub/grub.cfg
-# chmod og-rxw /boot/grub/grub.cfg
-
-# grub-mkpasswd-pbkdf2 | tee tmpfile && \
-# echo '
-# cat <<EOF
-# set superusers="$USERNAME"
-# password_pbkdf2 $USERNAME $(cat tmpfile | grep -P "PBKDF2.*")
-# EOF' >> /etc/grub.d/00_header && \
-# shred -uvzn 37 tmpfile && \
-# update-grub
-# passwd root
-
-## 7) Configure apparmor
-# if [ "$(ps -eZ | egrep 'initrc' | egrep -vw 'tr|ps|egrep|bash|awk' | tr ':' ' ' | awk '{print $NF }')" != '' ]; then
-# 	ps -eZ | egrep 'initrc' | egrep -vw 'tr|ps|egrep|bash|awk' | tr ':' ' ' | awk '{print $NF }' > /var/log/unconfined.daemon
-
-## 8) Configure permissions
-
-
-
-## 9) Upgrades
-# rfkill unblock all && \
-# sleep 5 && \
-
-
-## 11) Configure services
-# ntp
-# crony
-# auditd
-# rsyslog
-# snort
-# tripwire
-# syslog-ng
-# logrotate
-# cron
-
-# for package in $(dpkg --list | grep -oP "ii\s+.*?\s" | grep -oP " \w+.*$" | grep -oP "\S+")
-# do
-# 	dpkg --verify $package
-# done
-
-## 12) Create swap.
-#swapon -s && \
-#dd if=/dev/zero of=/swapfile bs=4M count=1000 && \
-#mkswap /swapfile && \
-#swapon /swapfile && \
-## 7a) Make swap persistent
-#echo "/swapfile swap swap defaults 0 0" >> /etc/fstab && \
-## 7b) Set Swapiness
-#echo 0 >> /proc/sys/vm/swappiness && \ 
-#echo vm.swappiness = 0 >> /etc/sysctl.conf
-
-## The thing is you will break apt
+## The thing is... you will break apt
 apt-get purge -y apport
 apt-get purge -y avahi-daemon avahi-utils avahi-autoipd
 apt-get purge -y cups
@@ -170,40 +101,4 @@ dpkg -P printer-driver-min12xxw
 dpkg -P printer-driver-pnm2ppa 
 dpkg -P printer-driver-ptouch 
 dpkg -P printer-driver-pxljr 
-dpkg -P printer-driver-sag-gdi 
-
-
-## XX) Remove unecessary users from /etc/passwd
-# games
-# lp (Who uses a printer anymore?)
-# news
-# list
-# usbmux
-# kernoops
-# irc
-# gnats
-# hplip
-# saned (saned is the SANE (Scanner Access Now Easy) daemon that allows remote clients to access image acquisition devices available on the local host.
-#        ^ Don't need or want that.
-
-
-## 16) Install and configure Snort.
-##     The package from the debian repo is 3 or 4 versions behind the current.
-##     You will need to get it from the snort dudes.
-
-INET_IFACE="wlan0"
-SSH_SERVER_PORT=22
-## 17) Configure IPTables.
-# Only use -F followed by drop default if you have access.
-# for remote start with `iptables -A -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-# Then add your rules, then add the DROP default
-
-
-
-## 19) Personal Customizations
-# mkdir ~/bin
-# wget https://subdomain.domain.tld/path/to/my/scripts
-# Eternal bash_history
-
-
-
+dpkg -P printer-driver-sag-gdi

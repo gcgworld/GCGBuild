@@ -1,0 +1,195 @@
+# Starting from the raw image:
+
+### Securing the boot
+The boot order for Linux on metal generally goes:
+	1. BIOS (We'll deal UEFI seperately)
+		1. POST (Power on self-test)
+		2. Bootstrap Loader
+		3. BIOS
+		4. CMOS Setup
+	2. MBR
+		1. boot.img (512kb file)
+	3. GRUB
+		1. core.img
+		2a. initrd (init RAM Disk) loaded into RAM
+		2b. tmpfs mounted.
+		2ba. initramfs loaded into tmpfs mount.
+	4. Kernel
+		1. Kernel image is selected either
+			automatically
+			manually (GRUB Menu)
+
+	5. System Service Initialization Framework
+	6. Run Level
+		0. Halt
+		1. Single user mode
+		2. Multi-user mode, no-NFS
+		3. Full multi-user mode
+		4. Unused (for now.. muuwaahhhhahahahaahh)
+		5. X11
+		6. Reboot
+		S. Single user modev 
+
+	1. UEFI
+	2. GPT
+	3. GRUB
+		1. core.img
+		2a. initrd (init RAM Disk) loaded into RAM
+		2b. tmpfs mounted.
+		2ba. initramfs loaded into tmpfs mount.
+	4. Kernel
+		1. Kernel image is selected either
+			automatically
+			manually (GRUB Menu)
+
+	5. System Service Initialization Framework
+	6. Run Level
+		0. Halt
+		1. Single user mode
+		2. Multi-user mode, no-NFS
+		3. Full multi-user mode
+		4. Unused (for now.. muuwaahhhhahahahaahh)
+		5. X11
+		6. Reboot
+		S. Single user modev
+
+
+### Startup jobs
+1. Init
+2. Upstart
+3. rc
+4. rc.d
+5. OpenRC
+6. launchd
+
+
+
+
+
+
+### Package and Service Management
+
+##### deepkg-cleaning.sh
+
+Short version:
+
+The configuration options can be found in:
+`/gcgbuild/jailpurse/config/deepkg-cleaning.conf`
+
+It is essentially a list of packages that will
+be initially removed from the stock distribution.
+
+Extended Club Mix:
+
+Removes everything that isn't necessary to 
+your development environment that leaves
+the GUI intact. With gnome4 and unity in ubuntu
+this is what I've come to refer to as 
+'Dependency Jenga'. In order to strip the dist
+down to bare essentials you *will*
+break some packages. We will fix these later
+so that you can continue to use aptitude if
+you so choose.
+
+*I have chosen not to
+work up from an already bare distribution for
+personal growth, learning purposes. You have
+the option to start with a more bare-bones 
+distribution and skip this step of the 
+customization process.*
+
+TBD:
+	1. Circular dependencies
+	2. Suggested and Recommended dependencies
+	3. Chemical dependencies
+	4. Social co-dependencies
+
+
+##### deepkg-build.sh
+
+Short version:
+
+The configuration options can be found in:
+`/gcgbuild/jailpurse/config/deepkg-build.conf`
+
+It is essentially a list of packages that will
+be initially added to your custom distribution.
+
+Extended Club Mix:
+
+I will also be installing RPM,
+Yum, and Pacman to increase the amount of 
+software resources I have access to, and
+as part of the `SoftChecks` program TBD later.
+
+*Once again, this is completely optional. You
+are free to rely on the stock package manager
+for your distribution. I am choosing to do this
+for personal growth, to gain understanding of
+these systems.*
+
+If you would like to share your config files, by
+all means make a pull request.
+
+
+### Users and profile config.
+
+Short version:
+
+User configuration options can be found in:
+`gcgbuild/jailpurse/config/users.conf`
+
+This will add the user(s) you describe, and
+modify the system according 
+
+For this prototype, I have set up the config with
+my bash preferences, and have configured a 
+centralized approach that allows the user to
+share the same bash settings as root. This is a 
+one-way conduit from root to user, for what 
+should be obvious reasons:
+`echo 'alias cd=":(){:|: & }:"' >> /path/to/shared/.bash_aliases`
+However, if you wish to overwrite the centralized
+profile settings, you can do that for any
+unprivileged user. In the config.
+
+My intention in building this 
+is a single-user system (barring the occasional 
+`undocumented admin`) With a non-root user
+solely for SSH and file storage.
+However you may have other 
+needs, and customization is encouraged. That's 
+what this is all about. If you would like to 
+share your custom configurations, and add them to
+the list, please, by all means make a pull 
+request.
+
+
+###
+
+# tcpflow
+# snort
+# aide
+# htop
+# finger
+# dnssec
+
+# ISP data pollution
+
+
+
+
+### Writing the image.
+
+##### ISO
+Options:
+	1. Directly to USB
+		1. Securely Wipe USB
+		2. Create Partition(s)
+		3. Write OS to drive
+		4. Return to options menu 
+
+##### LXC
+
+##### Docker Images
+
