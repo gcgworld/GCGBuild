@@ -83,6 +83,19 @@ show_help() {
             1 = Info   "Notify when each step finishes."
             2 = Debug  "Print every step to STDOUT."
 
+        #######################################
+        #       Gangster Computer God™®       #
+        # is a copyright of Gabriel Schroder. #
+        #     All fucking rights reserved.    #
+        # I am putting it on the internet,    #
+        # and I mean, people use shit that    #
+        # gets put on the internet.. duncare. #
+        # But if you make money off it I get  #
+        # 10%. Instagram donated $0 dollars   #
+        # to the Django Foundation... What    #
+        # else is there to say about open source?
+        #######################################
+EOF
 }
 
 
@@ -98,12 +111,16 @@ edit_mount_dir=$root_mount_dir/edit
 build_mount_dir=$root_mount_dir/build
 host_jailpurse=$gcg_build_dir/jailpurse
 guest_jailpurse=$edit_mount_dir/root/jailpurse
-log_dir=/var/log/gcg
+host_log_dir=/var/log/gcg
+guest_log_dir=/var/log/gcg
 log_level="logging-none"
 networking="network-disabled"
 verbose="info"
 project_name="GCGLinux"
 version="0.0.1"
+sessions=( read -r -a <<< "$(ls -l $host_log_dir/sessions/)" )
+edit_session_no=${#$session[*]}
+edit_session_id="$(echo $host_log_dir/session/)"
 image_host=false  ## This is going to be the most challenging part.
 
 
@@ -331,10 +348,10 @@ edit_system() {
     echo "Hack like nobodies watching.."
     chroot $edit_mount_dir
     echo "You have exited the guest.."
-    exit
 }
 
 write_new_image_manifest() {
+    ## Write new image manifest and write it to your change log.
     if [ "$verbose" == "event" ]; then
         chmod +w $build_mount_dir/casper/filesystem.manifest
         chroot $edit_mount_dir dpkg-query -W --showformat='${Package} ${Version}\n' > $build_mount_dir/casper/filesystem.manifest
@@ -354,10 +371,10 @@ write_new_image_manifest() {
         cp --verbose $build_mount_dir/casper/filesystem.manifest $build_mount_dir/casper/filesystem.manifest-$project_name
         echo "Finished package manifest for new image.."
     fi
-    exit   
 }
 
 build_new_image_fs() {
+    ## Build new filesystem from edited ...
     if [ "$verbose" == "event" ]; then
         mksquashfs $edit_mount_dir $build_mount_dir/casper/filesystem.squashfs
     fi
@@ -375,8 +392,9 @@ build_new_image_fs() {
 }
 
 generate_new_image_checksums() {
+    ## Create list of new list checksums from file.manifest
     if [ "$verbose" == "event" ]; then
-        rm $build_mount_dir/md5sum.txt
+        rm $build_mount_dir/md5sum.txt $/build_mount_dir
         cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt
     fi
     if [ "$verbose" == "info" ]; then
@@ -414,7 +432,7 @@ generate_new_iso() {
         -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o $custom_image_dir .
         echo "Finished building $project_name$version.iso.."
     fi
-    exit
+    
 }
 
 clean_up() {
@@ -440,12 +458,16 @@ clean_up() {
     exit
 }
 
-## Returning to the host system.
+decision() {
+    echo "What's next?"
+    echo "[1] Save your changes to your .iso and keep working."
+    echo "[2] Save your changees to your .iso and quit."
+    echo "[3] View your activity logs."
+    echo "[4] Discard your changes and start over."
+    echo "[5] Discard your changes and work on another project."
+    echo "[6] Discard changes and quit."
+    echo "[7] View the User manual."
+    echo "[Q]uit"
+    read decision
 
-echo "How would you like to proceed?"
-echo "[W]rite changes to image\n
-[R]eturn to editing\n
-[D]iscard changes and clean up\n
-[N]othing, just exit."
-echo "Select an option and press Enter: "
-read NEXT_ACTION
+}
