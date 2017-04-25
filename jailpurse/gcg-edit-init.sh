@@ -1,9 +1,8 @@
 #!/bin/bash
 
-## Run from within chroot of gcgbuild
-## Finish mounting OS resouces.
-## Add scripts dir jailpurse to path.
-## Set internal ENVs
+## Setup image for editing.
+
+
 
 ## Check to make sure we are in the chroot context.
 if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
