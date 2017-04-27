@@ -1,0 +1,3 @@
+mksquashfs:squashfs-tools
+genisoimage:genisoimage
+rsync:rsync

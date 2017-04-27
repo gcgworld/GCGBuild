@@ -1,0 +1,35 @@
+create_directories
+mount_base_image
+init_build_image
+mount_fs
+create_edit_fs
+mount_fs
+smuggle_in
+networking
+setup_guest_internals
+edit_image
+write_new_image_manifest
+build_new_image_fs
+generate_new_image_checksums
+generate_new_iso
+clean_up
+decision
+
+Program flow:
+	Edit Mode
+		Mount image:
+			create_directories
+			mount_base_image
+		Mount file system:
+			mount_fs
+			create_edit_fs
+		Smuggle in your config:
+			smuggle_in
+			if [ "$networking" == "enabled" ]; then
+				setup_networking
+			fi
+			setup_guest_internals
+		Enter edit image:
+			edit_image
+
+	Savi 

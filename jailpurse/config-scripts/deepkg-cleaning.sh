@@ -15,9 +15,6 @@ parse_args() {
 	read -r -a instruction <<< $conf_line
 	if [ "${instruction[0]}" == "purge" ]; then
 		action="apt-get ${instruction[0]} -y ${instruction[1]}"
-		
-
-
 }
 
 read_pkg_list() {
@@ -25,10 +22,7 @@ read_pkg_list() {
 	do
 		parse_args	
 	done
-	return 0
 }
-
-read_pkg_list
 
 
 

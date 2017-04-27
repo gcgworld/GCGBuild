@@ -1,0 +1,117 @@
+
+
+Gangster Computer God Help.
+
+"Our Gangster Computer God is a benevolent Gangster Computer God.."
+
+Usage: gcgbuild.sh [-options] [-b BASE_IMAGE]
+Options:
+    -b, --base-image: "/path/to/base_image.iso"
+
+        Choose image to edit.
+
+        example: gcgbuild -b images/base/ubuntu-desktop-14.04.05.iso
+
+
+    -h, --help: Show this message and exit.
+    
+    
+    -l, --log-dir: "\e[4m/path/to/log/dir\e[0m"
+        Default is "\e[4m/var/log/gcg\e[0m"
+    
+        Select directory for changelog.
+        If directory does not exist, gcg will
+        attempt to create it.
+    
+        example: gcgbuild -l /tmp/gcg/changelog
+                 gcgbuild --log-dir ~/log/gcg
+
+    
+    -L, --log-level:
+        Default: "\e[4mInfo\e0m"
+
+        0 = None   "No logging."
+        1 = Entry  "Log commands issued editing."
+        2 = Info   "Log files added/deleted changed."
+        3 = Debug  "Log everything we can think of."
+
+
+    -m, --mount-point: "\e[4m/path/to/mnt/dir\e[0m"
+        Default: "\e[4m/mnt\e0m"
+        
+        Choose base directory to mount the 
+        base image, the filesystem, create
+        the copy of the filesystem to edit,
+        and the copy of the image we will 
+        add our changes too, and build from.
+
+        Example: gcgbuild -m /tmp/gcg
+                 gcgbuild --mount-point /opt/mountpoint
+
+    
+    -n, --no-networking:
+        Default: "\e[4mnetwork=enabled\e0m"
+        
+        Prevent the guest system from 
+        accessing your network from chroot
+        jail.
+        
+        Example: gcgbuild -n
+                 gcgbuild --no-networking
+
+
+    -N, --no-jailpurse:
+        Default: jailpurse=enabled
+
+        Do not copy the jailpurse tool
+        folder into the guest system.
+        Work with the raw image.
+
+        Note: This inherently disables gcg
+              logging while editing the 
+              image.
+
+        Example: gcgbuild -N
+                 gcgbuild --no-jailpurse
+
+
+    -o, --output-target:
+        Default: "\e[4m/gcgbuild/images/custom\e0m"
+
+        Choose destination to write custom image
+        after it has been built.
+
+        Example: gcgbuild -o ~/OpSystems
+                 gcgbuild --output-target /tmp/build/gcg
+
+
+    -t, --title:
+        Default: "\e[4m/gcgbuild/images/custom\e0m"
+
+        Choose destination to write custom image
+        after it has been built.
+
+        Example: gcgbuild -t "GCGLinux"
+                 gcgbuild --title "Eunice"
+
+
+    -v, --verbose: 
+        Default: "\e[4mInfo\e0m"
+
+        0 = Event  "Only notify for user action."
+        1 = Info   "Notify when each step finishes."
+        2 = Debug  "Print every step to STDOUT."
+
+
+        #######################################
+        #       Gangster Computer God™®       #
+        # is a copyright of Gabriel Schroder. #
+        #     All fucking rights reserved.    #
+        # I am putting it on the internet,    #
+        # and I mean, people use shit that    #
+        # gets put on the internet.. duncare. #
+        # But if you make money off it I get  #
+        # 10%. Instagram donated 0 dollars to #
+        # the Django Foundation... What else  #
+        # is there to say about open source?  #
+        #######################################
