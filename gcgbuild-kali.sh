@@ -5,15 +5,11 @@
 # https://unix.stackexchange.com/questions/260796/how-to-make-an-iso-of-my-installed-system   #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
-
-
-
 GCG_BUILD_DIR=$(dirname $0) 
 PATH_TO_BASE_ISO=$1
 PATH_TO_BUILD_ISO=$GCG_BUILD_DIR/images/custom
 NAME_OF_DISTRO="GCGLinux"
-VERSION="0.0.1"
+VERSION=0.0.1
 INITIAL_MOUNT=/mnt/initial-image
 FS_MOUNT=/mnt/image/squashfs
 EDIT_MOUNT=/mnt/image/edit
@@ -33,15 +29,15 @@ fi
 
 mkdir --verbose -p $INITIAL_MOUNT $FS_MOUNT $EDIT_MOUNT $BUILD_MOUNT &&
 mount --verbose -o loop $PATH_TO_BASE_ISO $INITIAL_MOUNT &&
-rsync --verbose --exclude=/casper/filesystem.squashfs -a $INITIAL_MOUNT/ $BUILD_MOUNT &&
+rsync --verbose --exclude=/live/filesystem.squashfs -a $INITIAL_MOUNT/ $BUILD_MOUNT &&
 modprobe --verbose squashfs &&
-mount --verbose -t squashfs -o loop $INITIAL_MOUNT/casper/filesystem.squashfs $FS_MOUNT/ &&
+mount --verbose -t squashfs -o loop $INITIAL_MOUNT/live/filesystem.squashfs $FS_MOUNT/ &&
 cp --verbose -a $FS_MOUNT/* $EDIT_MOUNT &&
 mkdir --verbose -p $EDIT_SYSTEM_SCRIPT_FOLDER &&
 cp -R --verbose $HOST_SCRIPT_FOLDER/* $EDIT_SYSTEM_SCRIPT_FOLDER/ &&
-cp /etc/resolv.conf /etc/hosts $EDIT_SYSTEM_ETC_FOLDER &&
-cp /etc/apt/sources.list $EDIT_SYSTEM_ETC_FOLDER/apt/ &&
-chroot $EDIT_MOUNT bash -c /root/jailpurse/gcg-edit-init.sh && \
+# cp /etc/resolv.conf /etc/hosts $EDIT_SYSTEM_ETC_FOLDER &&
+# cp /etc/apt/sources.list $EDIT_SYSTEM_ETC_FOLDER/apt/ &&
+# chroot $EDIT_MOUNT bash -c /root/jailpurse/gcg-edit-init.sh && \
 echo "Image is loaded and ready to enter..."
 echo "Entering Edit Context."
 
@@ -58,15 +54,15 @@ echo "Select an option and press Enter: "
 read NEXT_ACTION
 ## Lack of elif in bash without nested if. Case statement will be cleaner.
 if [ $NEXT_ACTION == 'w' ] || [ $NEXT_ACTION == 'W' ]; then
-    chmod +w $BUILD_MOUNT/casper/filesystem.manifest
-    chroot $EDIT_MOUNT dpkg-query -W --showformat='${Package} ${Version}\n' > $BUILD_MOUNT/casper/filesystem.manifest
-    cp $BUILD_MOUNT/casper/filesystem.manifest $BUILD_MOUNT/casper/filesystem.manifest-desktop
-    mksquashfs $EDIT_MOUNT $BUILD_MOUNT/casper/filesystem.squashfs
+    chmod +w $BUILD_MOUNT/live/filesystem.manifest
+    chroot $EDIT_MOUNT dpkg-query -W --showformat='${Package} ${Version}\n' > $BUILD_MOUNT/live/filesystem.manifest
+    cp $BUILD_MOUNT/live/filesystem.manifest $BUILD_MOUNT/live/filesystem.manifest-desktop
+    mksquashfs $EDIT_MOUNT $BUILD_MOUNT/live/filesystem.squashfs
     rm $BUILD_MOUNT/md5sum.txt
     sudo -s
     (cd $BUILD_MOUNT && find . -type f -print0 | xargs -0 md5sum > md5sum.txt && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt)
     cd $BUILD_MOUNT
-    genisoimage -r -V "$NAME_OF_DISTRO$VERSION" -b isolinux/isolinux.bin -c isolinux/boot.cat -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o $PATH_TO_ISO .
+    genisofs -r -V "$NAME_OF_DISTRO$VERSION" -b isolinux/isolinux.bin -c isolinux/boot.cat -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o $PATH_TO_ISO .
 	echo "Cleaning up temporary files..."
 	umount --verbose $FS_MOUNT
 	umount --verbose $INITIAL_MOUNT
