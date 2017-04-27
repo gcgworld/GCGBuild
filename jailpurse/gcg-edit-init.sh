@@ -1,9 +1,8 @@
 #!/bin/bash
 
-## Run from within chroot of gcgbuild
-## Finish mounting OS resouces.
-## Add scripts dir jailpurse to path.
-## Set internal ENVs
+## Setup image for editing.
+
+
 
 ## Check to make sure we are in the chroot context.
 if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
@@ -13,12 +12,23 @@ if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
     mount --verbose -t proc none /proc/
     mount --verbose -t sysfs none /sys/
 
-    
-    ## Set Environment Variables for scripts
-    export HOME=/root
+    ## Setup Your Environment
+    cp /root/jailpurse/profile /etc/profile
+    cp /root/jailpurse/.bashrc /root/.bashrc
+    cp /root/jailpurse/.bash_aliases /etc/.bash_aliases
     export PATH=$PATH:/root/jailpurse
 
+    ## Setup Logs
+        ## List of commands issued.
+    mkdir -p /var/log/gcg/commands
+        ## Initial and final with sha256sum and sha512sum
+    mkdir -p /var/log/gcg/files
+        ## Initial and final packages.
     
+        ## Time started, finished.
+    mkdir -p /var/log/gcg/session-info
+        ## 
+
     echo "Image is ready to edit." 
 else
     echo "Actually not chrooted! Exiting."
