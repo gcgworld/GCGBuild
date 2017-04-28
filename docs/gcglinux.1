@@ -9,7 +9,7 @@ GCGLinux \- Gangster Computer God Linux
 
 .SH DESCRIPTION
 .B GCGLinux
-is a system for investigating, and modifying linux live distributions.
+is a system for investigating, modifying, and repackaging linux live distributions.
 
 .B GCGLinux
 consists of 3 main components:
@@ -44,20 +44,12 @@ through apt or dpkg directly, and install \fI.deb\fR files.
 also comes with some scripts to extract dpkg packages from
 distributions.
 
-.B gcg-components
+.B gcglines
 are essentially collections of software, configurations,
-and security enhancements for 
-.B gcgbuild
-This project was actually started with the intention of 
-securing a computer to point that you could host a robust
-web-application transacting financial data, and still
-do development on it, because the attacks would not be a
-concern.. Then we woke up.
+security enhancements, server setups, aesthetics, etc.
+that can be more or less haphazardly dropped into a live
+distro, and work.
 
 
-.SH OPTIONS
-.BR \-b ", "\-\-base-image \fI\/path/to/linux-live-image.iso\fR
-Absolute or relative path to the live-image.iso you want to edit.
-(Does not support cramfs, only squashfs)
 
-.BR \-h ", "\-\-help
+

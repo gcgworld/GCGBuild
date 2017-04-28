@@ -22,20 +22,27 @@ Functions in bash can take parameters, unless you them in as variables.
 		separate library. Create generic functions to help with sysadmin
 		tasks while you're at it.
 
-
+###DONE###
 1c) dpkg-it-casual ~> jailpurse/bedroom needs to prove out.
+###DONE###
 
+###DONE###
 1d) create man page.
+###DONE###
 
-1e) Go back through CIS hardening guide and make sure you've got those bases
-	covered.
 
-1f) Identify all of the branding spots. Change the uname lsb_release, etc..
+1e) Go back through CIS hardening guide and make sure you've got those bases covered. (This is gcglines)
+
+
+
+1f) Identify all of the branding spots. Change the uname lsb_release, etc.. (gcglines)
+
+
 
 1h) Find installation script and set the partitions to the correct permissions 
 	as laid out in the CIS guide.
 
-1i) LXC support for virtual machines.
+1i) LXC support for virtual machines. (Is LXC still a working standard?) (gcglines)
 
 
 2) Put no weight on logging until acct and whowatch are investigated to serve
@@ -51,6 +58,8 @@ Functions in bash can take parameters, unless you them in as variables.
 		v
 
 4) Pick an http server, install that bitch with a site running.
+
+
 
 5) Branding. Don't be tech, be a hipster. Swear a lot.
 

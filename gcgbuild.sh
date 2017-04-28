@@ -326,6 +326,22 @@ setup_logging_framework() {
     fi
 }
 
+setup_logging_session() {
+    echo "parse session_id /var/log/gcg/$profile/session_id"
+    echo "increment session_id"
+    echo "create /var/log/gcg/$profile/session_id"
+    echo "create the subsidiary folders we decide on."
+
+}
+
+logging_wrapper_function() {
+    # if verbose is off but log-level is high,
+    # change the verbosity back to high
+    # and run all functions in this wrapper
+    # which will forward all stdout to /var/log/gcg/$profile/Session_id/init-log or whatever
+    echo "We are going to use variables to pass parameters."
+}
+
 strip_trailing_dir_slash() {
     if [ -z $1 ]; then
         echo "No input.."

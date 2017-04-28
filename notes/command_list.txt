@@ -4,52 +4,250 @@ command_list.txt
 while [ "$break" != "0" ]; do number=$(( $RANDOM * 2 )); if [ 1040 -lt $number -a $number -lt 65535 ]; then echo $number; break=0; fi; done; unset break; unset number;
 4894
 
-DEALING WITH BINARIES:
+
+Create a tar.xz archive:
+Tar combines/concatenates files into one.
+XZ compression algorithm
+~$ tar -cJf archive.tar.xz /path/to/files/*
+
+
+
+HARDWARE:
+lshw
+lscpu
+lspci
+/proc/cpuinfo
+/proc/meminfo
+ckbcomp
+dumpkeys
+loadkeys
+
+
+BOOT:
+bootctl ~> Maybe could free the Mac
+biosdecode
+binfmt.d ~> config additional binary formats for executables at boot.
+futility
+grub
+vboot
+geteltorito
+
+
+KERNEL+SYSTEM SERVICES
+lsmod
+rmmod
+modprobe
+modinfo
+delpart
+getkeycodes
+
+
+(init)
+lsinitramfs
+busctl ~> monitor dbus
+gdbus
+
+getconf
+env
+
+MEMORY+PROCESSES
+lsof ~> LiSt Open Files (And a shit load of other information.)
+iostat
+strace
+dtrace
+pmap $PID (-XX) ~> Provides memory map of process, with permissions on address space.
+stat
+vmstat -a ~> Report virtual memory statistics.
+free ~> shows available physical memory on machine.
+catchsegv ~> catch segmentation faults in programs
+valgrind ~> fuzz an executable for memory leaks
+chrt ~> manipulate the real-time attributes of a process
+fixproc
+ps
+gcore
+ionice
+iostat
+ipcmk ~> create IPC resources/connections
+ipcrm ~> remove IPC resources/connections
+ipcs ~> get info on IPC Shischz
+lsipc
+lockfile
+mkfifo
+
+
+FILE SYSTEM & USB DRIVES
+lsusb
+usbhid-dump
+usb_modeswitch
+lsblk
+gdisk
+badblocks
+blkcalc
+blkcat
+blkls
+blkstat
+bulk_extractor
+chattr
+chcon
+delpart
+testdisk
+fsck
+flock
+free
+fsstat
+getfacl
+getfattr
+gparted
+ifind
+istat
+jcat ~> show the contents of a block in the FS Journal
+jls ~> list the contents of the FS Journal
+lsattr ~> list extended attrs on ext2
+lslocks
+lsns ~> list namespaces?
+lsx ~> list all the executables.. duh.
+devdump
+isovfy
+isoinfo
+isodump
+genisoimage
+fiwalk
+magicrescue
+free
+mmls
+mmcat ~> output a partitions contents to stdout.. (like dd?)
+mmstat
+
+PARSING+CHANGING BINARIES:
 gdb
-
 readelf
-
+gold
+dwarfdump
 objdump
-
+dissy ~> graphical frontend for objdump
+edb
+elfedit
 hexdump
-
 hexedit
+bcmp ~> compare byte sequences.
+ldd ~> print .so dependencies
 
-opextract.py
+
+FILE UTILS
+cksum ~> CRC checksum and number of bytes in a file
+cmp ~> compare two files byte by byte
+comm ~> compare two files line by line
+csplit ~> split a file into section based on 
+dc3dd ~> convert and copy a file (and format voodoo)
+dd ~> destory disk until it works again.
+dcfldd ~> enhanced dd for forensics and recovery
+(?dd_rescue?)
+dupemap!!! ~> use checksums rather than names to remove dupes from fs.
+encguess
+extundelete
+file-rename
+fls ~> list files in fs without . .. tree traversal nodes
+fmt ~> print text formatted to width {N}
+fold ~> fmt for input
+foremost ~> retrieve headers, footers, data structures and attempt to reassemble files.
+funzip
+tar
+lzma
+xz
+gzip
+hashcat
+hashdeep
+hashid
+hfind
+icat ~> cat file by inode instead of name
+iconv ~> conert text between character encondings
+ils ~> list inode info
+instmodsh???
+
+
+
+USERSPACE
+terminfo
+captoinfo
+cutycapt ~> capture a webkit rendering of a webpage
+mech-dump
+
+IMAGES
+cjpeg ~> compress a jpeg (and again.. and again.. and again..)
+composite ~> overlaps one image over another.
+dcparse ~> pull CIFF/TIFF data from thumbnail.
+dcraw ~> decoder for raw images.
+
+
+ANALYSIS
+dot ~> draw directed graphs (maybe use it for the whole single point-of-knowledge branch out idea)
+gc ~> count graph components
+gprof
+gvgen
+
+
+CONFUSION
+h2ph + h2xs
 
 
 NETWORKING
-netcat
-	The swissarmy knife of everything evidently.
+Networking tools really fall into 4 categories. Monitors, probes, filters, and hooks.
+probes try to become hooks => monitors become filters
+dmitry ~> get all of the info.
+dnmap ~> distributed nmap
+ettercap ~> (Just for intercepting my own traffic, really, i don't care what other people do.)
+netcat ~> The swissarmy knife of everything evidently.
+socat
+lnstat
+ngrep ~> grep pcap's with regex.
+iftop ~> top for cpu usage vs. net traffic
+ss -s ~> Super fast netstat analog
+glances ~> A lot of info in small space. concise overall summary
+nmon ~> cpu, mem, net, fs, ps ~> .csv
+inetsim
+fping ~> wrap the world in a shitty ping blanket
+
+
+TUNNELS
+dns2tcpc
+fragroute
+tcpwatch-httpproxy
+
+
+WIFI
+besside-ng ~> Catch WPA handshakes.
+capinfos ~> prints info about pcaps.
+
+
+ARP
+arp
+arpfetch
+arpsnmp
+bihourly ~> ARP to IP resolution
+get-iab
+get-oui
+macchanger
+
+IP
+mtr ~> Combines traceroute and ping
+
 
 DNS
 dig
-
 nslookup
-
 whois
-
-
+dnsenum
+dnsrecon
+dnstracer
+dnswalk
 ## echo "nameserver = x.x.x.x" >> /etc/resolvconf/resolvconf.d/base
 ## echo "nameserver = y.y.y.y" >> /etc/resolvconf/resolvconf.d/base
 
-ngrep
-	grep pcap's with regex.
 
-iftop
-	top for cpu usage vs. net traffic
+SOCKETS
+bind ~> bind a name to a socket
 
-ss -s
-	Super fast netstat analog
 
-mtr
-	Combines traceroute and ping
-
-glances
-	A lot of info in small space. concise overall summary
-
-nmon
-	cpu, mem, net, fs, ps ~> .csv
 
 netstat
 	Need to create a few quick filters to 
@@ -59,51 +257,17 @@ netstat
 	port  <=>   cmd,
 	open & listening
 
-lsof
-
-iostat
-
-strace
-
-dtrace
-
-pmap $PID (-XX)
-	Provides memory map of process, with permissions on address space.
-
-stat
-
-vmstat -a
-	Report virtual memory statistics.
-
-free
-	shows available physical memory on machine.
 
 
 
-HARDWARE:
-	lshw
 
-	lscpu
 
-	lspci
 
-	USB:
-	lsusb
-	usbhid-dump
-	usb_modeswitch
-	gdisk
 
-	FILE SYSTEM:
-	lsblk
 
-SOFTWARE:
-	lsinitramfs
 
-	KERNEL
-	lsmod
-	rmmod
-	modprobe
-	modinfo
+
+
 	
 
 
