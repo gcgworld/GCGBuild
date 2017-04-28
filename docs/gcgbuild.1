@@ -1,0 +1,57 @@
+.TH GCGBUILD 1
+.SH NAME
+GCGBuild \- Gangster Computer God build system
+.SH SYNOPSIS
+.B gcgbuild
+[\fB\-b\fR \fI/path/to/stagnation/and/weakness/through/settling/for/a/regualar/linux-distro-image.iso\fR]
+[\fB\-o\fR \fI/path/to/profound/strength/through/the/Gangster-Computer-God-Linux.iso\fR]
+.SH DESCRIPTION
+.B gcgbuild
+Allows you to investigate, modify, and repackage Linux distributions.
+.PP
+When
+.B gcgbuild
+is run, it mounts the designated image, [at \fI/mnt/base/\fR by default]. Then it locates and mounts the squashfs filesystem,
+then copies the file system into a directory that acts as the mount point for the editable image. Once the image is prepared, 
+.B gcgbuild
+will \fI\chroot\fR the user to the editable copy of the system. At the beginning of the process, 
+.B gcgbuild
+copies everything in the starting image except for the filesystem, to the directory from which
+.B gcgbuild
+will build the new \fI\.iso\fR once you are done editing.
+.SH OPTIONS
+.TP
+.BR \-b ", "\-\-base-image \fI\/path/to/linux-live-image.iso\fR
+Absolute or relative path to the live-image.iso you want to edit.
+(Presently only supports squashfs)
+.BR \-h ", "\-\-help
+Brings up the help dialog and exits.
+.BR \-i ", "\-\-image\-host
+(Not Yet Implemented) The goal is to image the host and convert
+it to a live distro with the only user input being the right
+disk in \fI/dev\fR to write the image to.
+.BR \-l ", "\-\-log\-dir \fI\/path/to/gcg/logs/\fR
+Change the directory to which
+.BR gcgbuild
+will write the logs. [Default is: \fI/var/log/gcg/\fR]
+.BR \-L ", "\-\-log-level \fI\[0, 1, 2, 3]\fR
+Log levels are
+\fI\None = 0\fR             Completely disable logging.
+\fI\Entry = 1\fR            Only log events that require user decisions.
+\fI\Info = 2\fR             Log each phase of the process, as well as before and after snapshots (sha512sums of files, changelog) of the system you are editing.
+\fI\Debug = 3\fR            Really, a lot of information. Every file that gets copied, timestamped, and hashed. Every command issued while editing the system, every process, pcaps of all network traffic not just to and from the custom image, but everyone in a 10 mile radius, `~# watch -n 0.25 lsof`, it's more that the human mind is capable of consuming much less processing. (But seriously, commands issued in the test system can help you back track if you break something.)
+.BR \-m ", "\-\-mount\-point \fI\/path/to/mount/workspace\fR
+Designate the path to mount the images and their copies that you will be working on. [Default is: \fI\/mnt/<your_projects_name>\fR]
+.BR \-n ", "\-\-no-networking
+Simply doesn't copy the host system's /etc/hosts file into the guest system, so the guest system doen't know where to look for a connection.
+.BR \-N ", "\-\-no-jailpurse
+Doesn't copy in the jailpurse directory while prepping the system. Any variables, config, amenities you assign or alot yourself through jailpurse will not be available immediately on entering the guest shell.
+.BR \-o ", "\-\-output\-target \fI\/path/to/write/your/live.iso\fR
+[Default is: \fI\./gcgbuild/images/custom/\fR]
+.BR \-t ", "\-\-title \fI"Your-Distro's-Name"\fR
+Setting this changes the paths for writing and naming the \fI\.iso\fR itself. It also creates a log directory by that name. If the project is worked on more that once, the logs of subsequent sessions on the same project will be stored together.
+.BR \-v ", "\-\-verbose \fI\[0, 1, 2]\fR
+Verbosity levels are
+\fI\Event = 0\fR            Program only creates output when it needs user feed back to continue.
+\fI\Info = 1\fR           	Alerts each time a step is started, completed, and what it was.
+\fI\Debug = 2\fR            In addition to alerts for program steps, all commands are executed with the verbose flag

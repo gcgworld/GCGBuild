@@ -1,0 +1,6 @@
+.B gcgbuild
+This project was actually started with the intention of 
+securing a computer to point that you could host a robust
+web-application transacting financial data, and still
+do development on it, because the attacks would not be a
+concern.. Then we woke up.
