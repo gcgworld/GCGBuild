@@ -1,22 +1,45 @@
-#!/bin/bash
-
-## Install all of the packages you want
-apt-get install -y \
-aide \
-alien \
-apparmor-utils \
-auditd \
-crony \
-deporphan \
-depfoster \
-fail2ban \
-finger \
-htop \
-logrotate \
-ntp \
-openssh-server \
-syslog-ng \
-tcpd \
-tcpflow \
-tripwire \
-unattended-upgrades \
+ainst:::aide
+ainst:::alien
+ainst:::apparmor-utils
+ainst:::auditd
+ainst:::deporphan
+ainst:::depfoster
+ainst:::fail2ban
+ainst:::finger
+ainst:::htop
+ainst:::logrotate
+ainst:::ntp
+ainst:::openssh-server
+ainst:::syslog-ng
+ainst:::tcpd
+ainst:::tcpflow
+ainst:::tripwire
+ainst:::unattended-upgrades
+ainst:::rkhunter
+ainst:::ntop
+ainst:::atop
+ainst:::powertop
+ainst:::iotop
+ainst:::ntopng
+ainst:::iftop
+ainst:::jnettop
+ainst:::nethogs
+ainst:::iptraf
+ainst:::iptstate
+ainst:::ngrep
+ainst:::bmon
+ainst:::traceroute
+ainst:::tcptraceroute
+ainst:::mtr
+ainst:::justniffer
+ainst:::nmon
+ainst:::glances
+ainst:::saidar
+ainst:::discus
+ainst:::incron
+ainst:::sysstat
+aisnt:::acct
+ainst:::whowatch
+dinst:::usbprog
+dinst:::usbutils
+dinst:::usbview

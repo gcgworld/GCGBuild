@@ -2,7 +2,7 @@
 
 ## Setup persistant IPTables rule set.
 
-$INET_IFACE=
+
 
 iptables -F
 iptables -P INPUT DROP && \

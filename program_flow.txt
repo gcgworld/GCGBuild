@@ -5,9 +5,9 @@ mount_fs
 create_edit_fs
 mount_fs
 smuggle_in
-networking
+setup_guest_networking
 setup_guest_internals
-edit_image
+enter_edit_image
 write_new_image_manifest
 build_new_image_fs
 generate_new_image_checksums
@@ -20,6 +20,8 @@ Program flow:
 		Mount image:
 			create_directories
 			mount_base_image
+		Setup custom build image:
+			init_build_image
 		Mount file system:
 			mount_fs
 			create_edit_fs
@@ -31,5 +33,13 @@ Program flow:
 			setup_guest_internals
 		Enter edit image:
 			edit_image
+		Exit edit image:
+			decision
 
-	Savi 
+	Save Custom Image:
+		Write new fs manifest:
+			write_new_image_manifest
+			build_new_image_fs
+			generate_new_image_checksums
+			generate_new_iso
+

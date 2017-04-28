@@ -17,19 +17,7 @@
 	/etc/bash.bashrc
 	/etc/.bash_aliases
 	/etc/bash_completion 2> . /usr/share/bash-completion/bash-completion
-	/etc/bash_completion.d/
-			axi-cache
-			cryptdisks
-			debconf
-			debfoster
-			deborphan
-			desktop-file-validate
-			git-prompt
-			grub
-			initramfs-tools
-			insserv
-			ufw
-			upstart
+
 	/etc/skel/.bashrc
 	/etc/skel/.bash_logout
 
@@ -40,9 +28,18 @@
 
 
 	/etc/profile
-		usually sources some config in /etc/config
-		passes control to
+		sources /etc/bash.bashrc ## System-wide bashrc
+			/usr/share/bash-completion/bash_completion is commented out by default
+			initiates command-not-found use.
+		for i in /etc/profile.d/*.sh
+			sources $i
+				appmenu-qt5.sh
+				bash_completion.sh
+				vte.sh
+	## Next bash looks for 
 	~/.bash_profile
+		sources ~/.bashrc
+		## that's it for root by default
 	~/.bash_login
 	~/.profile
 

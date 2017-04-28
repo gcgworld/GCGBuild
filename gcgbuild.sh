@@ -121,54 +121,42 @@ show_help() {
 EOF
 }
 
-## Project custom vars
-project_name="GCGLinux"
-version=( 0 0 1 )
-version_string="$(printf "%s.%s.%s" "${version[@]}")"
+## Vars we want to initialize before we use user args
+## to declare variables. Defaults.
 
-## Mount, Edit, and Build vars
+## Default project name.
+project_name="GCGLinux"
+
+## Default image to load.
 gcg_build_dir=$(dirname $(readlink -f $0))
 image_dir=$gcg_build_dir/images
 base_image_dir=$image_dir/base
 base_image="/ubuntu-14.04.05-desktop-amd64.iso"
-
-root_mount_dir=/mnt/$project_name
-base_mount_dir=$root_mount_dir/base
-base_image_fs=$base_mount_dir/casper/filesystem.squashfs
-fs_mount_dir=$root_mount_dir/fs
-edit_mount_dir=$root_mount_dir/edit
-edit_mount_proc=$edit_mount_dir/proc
-edit_mount_sys=$edit_mount_dir/sys
-build_mount_dir=$root_mount_dir/build
-
 custom_image_dir=$image_dir/custom
-custom_image="$custom_image_dir/$project_name-$version_string.iso"
 
+## Default mount dir.
+root_mount_dir="/mnt"
 
-## Jailpurse vars
+## Default Jailpurse vars
 jailpurse="enabled"
 host_jailpurse=$gcg_build_dir/jailpurse
 guest_jailpurse=$edit_mount_dir/root/jailpurse
 
 ## Logging vars
+log_level="none"
 host_log_dir=/var/log/gcg
 guest_log_dir=/var/log/gcg
-log_level="none"
-
-# sessions=( if [ -d $host_log_dir/sessions ]; then read -r -a <<< "$(ls -l $host_log_dir/sessions/)" )
-# edit_session_no=${#session[*]}
-# edit_session_id="$(echo $host_log_dir/session/)"
 
 ## Networking vars
 networking="enabled"
 
-## misc settings
+## Default verbosity
 verbose="info"
 
 ## Mode: Build image from the current OS
 image_host=false  ## The how TBD
 
-
+## Parse user arguments.
 while [ "$1" ]
 do
     case $1 in
@@ -301,6 +289,71 @@ do
     shift
 done
 
+## Project custom vars
+
+version=( 0 0 1 )
+version_string="$(printf "%s.%s.%s" "${version[@]}")"
+
+## Mount, Edit, and Build vars
+root_mount_dir="$root_mount_dir/$project_name"
+base_mount_dir="$root_mount_dir/base"
+base_image_fs="$base_mount_dir/casper/filesystem.squashfs"
+fs_mount_dir="$root_mount_dir/fs"
+edit_mount_dir="$root_mount_dir/edit"
+build_mount_dir="$root_mount_dir/build"
+
+edit_mount_proc=$edit_mount_dir/proc
+edit_mount_sys=$edit_mount_dir/sys
+
+custom_image="$project_name-$version_string.iso"
+
+# sessions=( if [ -d $host_log_dir/sessions ]; then read -r -a <<< "$(ls -l $host_log_dir/sessions/)" )
+# edit_session_no=${#session[*]}
+# edit_session_id="$(echo $host_log_dir/session/)"
+
+setup_logging_framework() {
+    if [ -d "/var/log/gcg" ]; then
+        ## look for project name.
+        ## increment session id.
+        ## create new session folder.
+        ## start running logging wrappers.
+}
+
+strip_trailing_dir_slash() {
+    if [ -z $1 ]; then
+        echo "No input.."
+    else
+        if [ "${$1:$((${#$1}-1))}" == "/" ] && [ "$1" != "/"]; then
+            clean_path="${$1:0:$((${#$1}-1))}"
+        fi
+        return $clean_path
+    fi
+}
+
+confirm_cmd() {
+    if [ -z $1 ]; then
+        echo "No command to check."
+    else
+        current_cmd="$(for arg in $@; do echo "$arg"; done)"
+        loop_break=0
+        while [ "$loop_break" != "1" ]
+        do
+            echo "$current_cmd"
+            read run_that_shit
+            case $run_that_shit in
+                y|Y)
+                    $current_cmd
+                    loop_break="1"
+                    ;;
+                n|N)
+                    echo "Declining to run: $current_cmd"
+                    loop_break="1"
+                    ;;
+            esac
+        done
+    fi
+}
+
 set_version_string() {
     version_string=$(printf "%s.%s.%s" "${version[@]}")
 }
@@ -328,6 +381,8 @@ select_new_base_image() {
     echo "This will be the pivot function to change the vars"
     echo "for when you want to switch to edit another image."
 }
+
+
 
 check_for_dependencies() {
     number_of_deps=$(wc -l dependencies.txt)
@@ -368,7 +423,7 @@ check_for_dependencies() {
     done
 }
 
-create_directories() {
+create_mount_directories() {
     if [ "$verbose" == "event" ]; then
         mkdir -p $base_mount_dir $fs_mount_dir $edit_mount_dir $build_mount_dir
     fi
@@ -386,16 +441,16 @@ create_directories() {
 
 mount_base_image() {
     if [ "$verbose" == "event" ]; then
-        mount -o loop $base_image_dir$base_image $base_mount_dir
+        mount -o loop $base_image $base_mount_dir
     fi
     if [ "$verbose" == "info" ]; then
         echo "Mounting base image to $base_mount_dir.."
-        mount -o loop $base_image_dir$base_image $base_mount_dir
+        mount -o loop $base_image $base_mount_dir
         echo "Finished mounting base image at $base_mount_dir.."
     fi
     if [ "$verbose" == "debug" ]; then
         echo "Mounting base image to $base_mount_dir.."
-        mount --verbose -o loop $base_image_dir$base_image $base_mount_dir
+        mount --verbose -o loop $base_image $base_mount_dir
         echo "Finished mounting base image at $base_mount_dir.."
     fi
 }
@@ -453,7 +508,7 @@ create_edit_fs() {
 }
 
 smuggle_in() {
-    if [ "$jailpurse" == "enabled"]; then
+    if [ "$jailpurse" == "enabled" ]; then
         if [ "$verbose" == "event" ]; then
             cp -R $host_jailpurse/* $guest_jailpurse
         fi
@@ -504,7 +559,7 @@ setup_guest_internals() {
             echo "Guest setup is complete.."
         fi
         if [ "$verbose" == "debug" ]; then
-            echo "Runinng setup scripts in guest system.."
+            echo "Running setup scripts in guest system.."
             chroot $edit_mount_dir bash -c /root/jailpurse/gcg-edit-init.sh
             echo "Guest setup is complete.."
         fi
@@ -647,7 +702,7 @@ clean_up_host() {
         echo "Cleaning up temporary files.."
         umount --verbose $fs_mount_dir
         umount --verbose $base_mount_dir
-        rm -rfv $root_mount_dir
+        rm -rfv "$root_mount_dir"
         echo "Finished cleaning temporary files.."
     fi
 }
@@ -694,7 +749,8 @@ decision() {
     fi
     if [ "$decision" == "6" ]; then
         discard_changes
-        quit_gcgbuild
+        echo "All Done!"
+        exit 0;
     fi
     if [ "$decision" == "7" ]; then
         show_help
@@ -704,6 +760,7 @@ decision() {
 
 load_edit_image() {
     check_for_dependencies
+    create_mount_directories
     mount_base_image
     init_build_image
     mount_fs
@@ -756,12 +813,9 @@ quit_gcgbuild() {
 }
 
 main() {
-    while true
-    do
-        load_edit_image
-        load_tools_into_image
-        edit_image
-    done
+    load_edit_image
+    load_tools_into_image
+    edit_image
 }
 
 main

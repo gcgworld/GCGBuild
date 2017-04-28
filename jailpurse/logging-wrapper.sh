@@ -1,6 +1,9 @@
 #!/bin/bash
 
 ## Wrapper functions for functions to pass events to log.
+## Look into using:
+## 		whowatch or acct
+
 
 log_event() {
 	event_name=""

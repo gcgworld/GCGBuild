@@ -1,0 +1,76 @@
+command_list.txt
+
+## random number between x and y
+while [ "$break" != "0" ]; do number=$(( $RANDOM * 2 )); if [ 1040 -lt $number -a $number -lt 65535 ]; then echo $number; break=0; fi; done; unset break; unset number;
+4894
+
+netcat
+	The swissarmy knife of everything evidently.
+
+ngrep
+	grep pcap's with regex.
+
+iftop
+	top for cpu usage vs. net traffic
+
+ss -s
+	Super fast netstat analog
+
+mtr
+	Combines traceroute and ping
+
+glances
+	A lot of info in small space. concise overall summary
+
+nmon
+	cpu, mem, net, fs, ps ~> .csv
+
+netstat
+	Need to create a few quick filters to 
+	snap info we want,
+	port  <=>   pid,
+	ip    <=>   pid,
+	port  <=>   cmd,
+	open & listening
+
+lsof
+
+iostat
+
+strace
+
+dtrace
+
+pmap $PID (-XX)
+	Provides memory map of process, with permissions on address space.
+
+stat
+
+vmstat -a
+	Report virtual memory statistics.
+
+
+
+HARDWARE:
+	lsusb
+
+	lshw
+
+	lscpu
+
+	lspci
+
+	FILE SYSTEM:
+	lsblk
+
+SOFTWARE:
+	lsinitramfs
+
+	KERNEL
+	lsmod
+	rmmod
+	modprobe
+	modinfo
+	
+
+
