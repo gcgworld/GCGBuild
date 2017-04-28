@@ -744,6 +744,16 @@ clean_up_host() {
     fi
 }
 
+write_to_usb() {
+    echo "Select drive."
+    echo "Format drive."
+    echo "Wipe drive."
+    echo "Zero or Mersenne prime twister."
+    echo "Create partitions. For OS, and for Storage."
+    echo "Write the OS to the partition."
+    echo "Create an encryption key for the storage."
+}
+
 decision() {
     echo "What's next?"
     echo "[1] Save your changes to your .iso and keep working."
