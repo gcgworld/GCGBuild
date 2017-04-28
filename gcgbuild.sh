@@ -312,13 +312,18 @@ custom_image="$project_name-$version_string.iso"
 # edit_session_id="$(echo $host_log_dir/session/)"
 
 setup_logging_framework() {
-    if [ -d "/var/log/gcg" ]; then
-        echo "Logging isn't implemented."
+    if [ "$log_level" != "none" ]; then    
+        if [ -d "/var/log/gcg" ]; then
+            echo "Logging is implemented."
+        else
+            mkdir -p /var/log/gcg
+
+            ## look for project name.
+            ## increment session id.
+            ## create new session folder.
+            ## start running logging wrappers.
+        fi
     fi
-        ## look for project name.
-        ## increment session id.
-        ## create new session folder.
-        ## start running logging wrappers.
 }
 
 strip_trailing_dir_slash() {
@@ -499,34 +504,58 @@ mount_fs() {
 create_edit_fs() {
     if [ "$verbose" == "event" ]; then
         cp -a $fs_mount_dir/* $edit_mount_dir
-        mkdir $edit_mount_dir/root/jailpurse
     fi
     if [ "$verbose" == "info" ]; then
         echo "Creating editable file system..";
         cp -a $fs_mount_dir/* $edit_mount_dir
-        mkdir $edit_mount_dir/root/jailpurse
         echo "Editable file system ready.."
     fi
     if [ "$verbose" == "debug" ]; then
         echo "Creating editable file system..";
         cp --verbose -a $fs_mount_dir/* $edit_mount_dir
-        mkdir --verbose $edit_mount_dir/root/jailpurse
         echo "Editable file system ready.."
+    fi
+}
+
+snapshot_edit_image() {
+    if [ "$log_level" != "none" ]; then
+        if [ -f /var/log/gcg/$project_name/$session_id/init-fs-snapshot.txt ]; then
+            chroot $edit_mount_dir /bin/bash -c \
+            "su - -c mkdir -p /var/log/gcg && \
+            find . -type f -print0 | xargs -0 sha512sum > /var/log/gcg/end-fs-snapshot.txt && \
+            find / >> /var/log/gcg/end-fs-tree.txt"
+            cp $edit_mount_dir/var/log/gcg/end-fs-snapshot.txt /var/log/gcg/$project_name/$session_id/end-state/
+            cp $edit_mount_dir/var/log/gcg/end-fs-tree.txt /var/log/gcg/$project_name/$session_id/end-state/
+            sed -i '/\/var\/log\/gcg/d' /var/log/gcg/end-fs-snapshot.txt
+            sed -i '/gcg/d' /var/log/gcg/end-fs-tree.txt
+        else    
+            chroot $edit_mount_dir /bin/bash -c \
+            "su - -c mkdir -p /var/log/gcg && \
+            find . -type f -print0 | xargs -0 sha512sum > /var/log/gcg/init-fs-snapshot.txt && \
+            find / >> /var/log/gcg/init-fs-tree.txt"
+            cp $edit_mount_dir/var/log/gcg/init-fs-snapshot.txt /var/log/gcg/$project_name/$session_id/init-state/
+            cp $edit_mount_dir/var/log/gcg/fs-tree.txt /var/log/gcg/$project_name/$session_id/init-state/
+            sed -i '/\/that\/test\/path/d' /var/log/gcg/init-fs-snapshot.txt
+            sed -i '/gcg/d' /var/log/gcg/fs-tree.txt
+        fi
     fi
 }
 
 smuggle_in() {
     if [ "$jailpurse" == "enabled" ]; then
         if [ "$verbose" == "event" ]; then
+            mkdir $edit_mount_dir/root/jailpurse
             cp -R $host_jailpurse/* $guest_jailpurse
         fi
         if [ "$verbose" == "info" ]; then
             echo "Copying scripts into guest system.."
+            mkdir $edit_mount_dir/root/jailpurse
             cp -R $host_jailpurse/* $guest_jailpurse
             echo "Finished copying scripts into guest system.."
         fi
         if [ "$verbose" == "debug" ]; then
             echo "Copying scripts to guest system.."
+            mkdir --verbose $edit_mount_dir/root/jailpurse
             cp -R $host_jailpurse/* $guest_jailpurse
             echo "Finished copying scripts into guest system.."
         fi

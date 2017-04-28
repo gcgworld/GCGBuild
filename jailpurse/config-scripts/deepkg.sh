@@ -6,13 +6,11 @@ IFS=":::"
 cur_pid="$$"
 config_scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 config_files_dir="$config_scripts_dir/config-files"
-echo "$config_scripts_dir"
-echo "$config_file_dir"
-pkgs_to_remove="./config-files/pkg-remove.conf"
 
 
 parse_args() {
 	read -r -a instruction <<< $conf_line
+
 	case "${instruction[0]}" in
 		ainst)
 			action='apt-get install -y "${instruction[1]}"'
@@ -25,7 +23,7 @@ parse_args() {
 			action='dpkg -i "$deb_pkg"'
 			unset deb_pkg
 		dpurge
-			action='dpkg -P "${instruction[0]}"'
+			action='dpkg -P "${instruction[1]}"'
 			;;
 		force)
 			action='dpkg -P --force-depends "${instruction[1]}"'
@@ -44,15 +42,22 @@ read_pkg_list() {
 		parse_args
 		execute_action
 	done
+	unset conf_line
 	echo "The requested packages have been removed."
 }
 
-pkg_list
+iter_through_pkg_lists() {
+	pkg_lists=( )
+	for pkg_list in $(find . -name "pkg-*.conf" -exec echo "{}" \;)
+	do
+		pkg_lists[${#pkg_lists[*]}]="$pkg_list"
+		read_pkg_list
+	done
+	unset pkg_list
+	echo "${pkg_lists[@]}"
+}
 
-
-# remove() {
-
-# }
+iter_through_pkg_lists
 
 # clean_debris() {
 

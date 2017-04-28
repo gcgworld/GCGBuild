@@ -4,8 +4,34 @@ command_list.txt
 while [ "$break" != "0" ]; do number=$(( $RANDOM * 2 )); if [ 1040 -lt $number -a $number -lt 65535 ]; then echo $number; break=0; fi; done; unset break; unset number;
 4894
 
+DEALING WITH BINARIES:
+gdb
+
+readelf
+
+objdump
+
+hexdump
+
+hexedit
+
+opextract.py
+
+
+NETWORKING
 netcat
 	The swissarmy knife of everything evidently.
+
+DNS
+dig
+
+nslookup
+
+whois
+
+
+## echo "nameserver = x.x.x.x" >> /etc/resolvconf/resolvconf.d/base
+## echo "nameserver = y.y.y.y" >> /etc/resolvconf/resolvconf.d/base
 
 ngrep
 	grep pcap's with regex.
@@ -49,16 +75,23 @@ stat
 vmstat -a
 	Report virtual memory statistics.
 
+free
+	shows available physical memory on machine.
+
 
 
 HARDWARE:
-	lsusb
-
 	lshw
 
 	lscpu
 
 	lspci
+
+	USB:
+	lsusb
+	usbhid-dump
+	usb_modeswitch
+	gdisk
 
 	FILE SYSTEM:
 	lsblk

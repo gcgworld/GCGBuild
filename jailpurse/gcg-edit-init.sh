@@ -2,8 +2,6 @@
 
 ## Setup image for editing.
 
-
-
 ## Check to make sure we are in the chroot context.
 if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
     echo "Finishing establishing the Edit Context."
@@ -16,7 +14,7 @@ if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
     cp /root/jailpurse/profile /etc/profile
     cp /root/jailpurse/.bashrc /root/.bashrc
     cp /root/jailpurse/.bash_aliases /etc/.bash_aliases
-    export PATH=$PATH:/root/jailpurse
+    
 
     ## Setup Logs
         ## List of commands issued.

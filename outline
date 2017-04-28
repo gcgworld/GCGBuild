@@ -1,18 +1,27 @@
+###DONE###
 1) Write function to search for filesystem.squashfs to open it up to
-	a shit load of other distros. 
+	a shit load of other distros.
+###DONE###
 
+###DONE###
 a1)deepkg-cleaning and install are one thing now.
 	a) it parses config files and removes or adds packages based on that.
 	b) add the functions for parsing the install file.
+###DONE###
 
 1a) Pass vars into jailpurse immediately after copying it for the edit.
 
+###DONE###
 1b) functions can take fucking parameters.
 	a) verbosity and logging are now parameters that get fed into every
 		function and not 6-9 extra lines of code in a function.
+###DONE###
+Functions in bash can take parameters, unless you them in as variables.
+
 	b) figure out how to break the generic helper functions into a 
 		separate library. Create generic functions to help with sysadmin
 		tasks while you're at it.
+
 
 1c) dpkg-it-casual ~> jailpurse/bedroom needs to prove out.
 
