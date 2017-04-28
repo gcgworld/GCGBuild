@@ -12,15 +12,14 @@
 ## she has some fun friends.
 
 fuck_palace="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/the_bedroom"
-mkdir -p $fuck_palace
+mkdir -p "$fuck_palace"
 
 try_to_get_them_pregnant() {
-	if [ "$one_of_theyre_kinks" != "" ]; then
-		cp --parents $the_thing_theyre_into $fuck_palace/$cute_lil_thang
-	else
-		cp --parents $the_thing_theyre_into $fuck_palace/$cute_lil_thang
-		ln -s $fuck_palace/cute_lil_thang$the_thing_theyre_into fuck_palace/$one_of_theyre_kinks
-	fi
+	cp --verbose --parents "$the_thing_theyre_into" /root/jailpurse/bedroom/the_bedroom/"${cute_lil_thangs[$cute_lil_thang]}"/
+#	else
+#		cp --verbose --parents $the_thing_theyre_into $fuck_palace/$cute_lil_thang
+#		ln -s $fuck_palace/cute_lil_thang$the_thing_theyre_into fuck_palace/$one_of_theyre_kinks
+#	fi
 }
 
 
@@ -31,12 +30,12 @@ discover_what_turns_them_on() {
 		if [ -f $the_thing_theyre_into ]; then
 			try_to_get_them_pregnant	
 		fi
-		if [ -L $the_thing_theyre_into ]; then
-			one_of_theyre_kinks="$the_thing_theyre_into"
-			the_thing_theyre_into=readlink -f $the_things_theyre_into
-			try_to_get_them_pregnant
-			one_of_theyre_kinks=""
-		fi
+#		if [ -L $the_thing_theyre_into ]; then
+#			one_of_theyre_kinks="$the_thing_theyre_into"
+#			the_thing_theyre_into=readlink -f $the_things_theyre_into
+#			try_to_get_them_pregnant
+#			one_of_theyre_kinks=""
+#		fi
 	done
 }
 
@@ -44,7 +43,7 @@ discover_what_turns_them_on() {
 get_them_back_to_your_place() {
 	for ((cute_lil_thang=0 ; cute_lil_thang < ${#cute_lil_thangs[*]} ; cute_lil_thang++))
 	do
-		mkdir -p "$fuck_palace/${cute_lil_thangs[$cute_lil_thang]}"
+		mkdir -p /root/jailpurse/bedroom/$fuck_palace/"${cute_lil_thangs[$cute_lil_thang]}"
 		discover_what_turns_them_on
 	done
 }
@@ -62,7 +61,7 @@ make_the_booty_calls() {
 
 have_game() {
 	lil_black_book=( )
-	for cutie_you_meet in $(dpkg --list | grep -oP 'ii\s+(\w+|\-|\:|\d+|\.)+' | grep -oP '\S+$')
+	for cutie_you_meet in "$(dpkg --list | grep -oP 'ii\s+(\w+|\-|\:|\d+|\.)+' | grep -oP '\S+$')"
 	do
 		lil_black_book[${#lil_black_book[*]}]="$cutie_you_meet"
 	done
@@ -70,7 +69,7 @@ have_game() {
 }
 
 
-swoop_all_the_ladies_town() {
+swoop_all_the_ladies_in_town() {
 	have_game
 }
 

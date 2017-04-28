@@ -1,0 +1,63 @@
+.TH GCGLINUX 1
+.SH NAME
+GCGLinux \- Gangster Computer God Linux
+
+.SH SYNOPSIS
+.B gcgbuild
+[\fB\-b\fR \fI/path/to/weak/basic/linux-distro-image.iso\fR]
+[\fB\-o\fR \fI/path/to/savage/Gangster-Computer-God-Linux.iso\fR]
+
+.SH DESCRIPTION
+.B GCGLinux
+is a system for investigating, and modifying linux live distributions.
+
+.B GCGLinux
+consists of 3 main components:
+.B gcgbuild
+.B jailpurse
+.B gcg-components
+
+.B gcgbuild
+mounts the image, locates and mounts the squashfs filesystem,
+then copies the file system into a directory that acts as
+a mount point. Once the image is prepared, 
+.B gcgbuild
+\fI\chroot\fR's the user to the editable copy of the system.
+At the beginning of the process, 
+.B gcgbuild
+copies everything in the starting image except for 
+the filesystem, to the directory from which
+.B gcgbuild
+will build the new \fI\.iso\fR once you are done editing.
+
+
+.B jailpurse
+is essentially a folder, that contains scripts to initialize
+the image for editing, and clean up anything left behind in
+the editing process. It is easily adapted to carry software, scripts, configuration files, images, and anything else you
+may want to help you customize "\fIYOUR\fR muthafuckin Linux
+distribution."
+The \fIdeepkg.sh\fR script reads the \fIpkg-install.conf\fR
+and \fIpkg-remove.conf\fR files, and can add/remove packages
+through apt or dpkg directly, and install \fI.deb\fR files.
+.B jailpurse
+also comes with some scripts to extract dpkg packages from
+distributions.
+
+.B gcg-components
+are essentially collections of software, configurations,
+and security enhancements for 
+.B gcgbuild
+This project was actually started with the intention of 
+securing a computer to point that you could host a robust
+web-application transacting financial data, and still
+do development on it, because the attacks would not be a
+concern.. Then we woke up.
+
+
+.SH OPTIONS
+.BR \-b ", "\-\-base-image \fI\/path/to/linux-live-image.iso\fR
+Absolute or relative path to the live-image.iso you want to edit.
+(Does not support cramfs, only squashfs)
+
+.BR \-h ", "\-\-help
