@@ -1,0 +1,52 @@
+1) Write function to search for filesystem.squashfs to open it up to
+	a shit load of other distros. 
+
+a1)deepkg-cleaning and install are one thing now.
+	a) it parses config files and removes or adds packages based on that.
+	b) add the functions for parsing the install file.
+
+1a) Pass vars into jailpurse immediately after copying it for the edit.
+
+1b) functions can take fucking parameters.
+	a) verbosity and logging are now parameters that get fed into every
+		function and not 6-9 extra lines of code in a function.
+	b) figure out how to break the generic helper functions into a 
+		separate library. Create generic functions to help with sysadmin
+		tasks while you're at it.
+
+1c) dpkg-it-casual ~> jailpurse/bedroom needs to prove out.
+
+1d) create man page.
+
+1e) Go back through CIS hardening guide and make sure you've got those bases
+	covered.
+
+1f) Identify all of the branding spots. Change the uname lsb_release, etc..
+
+1h) Find installation script and set the partitions to the correct permissions 
+	as laid out in the CIS guide.
+
+1i) LXC support for virtual machines.
+
+
+2) Put no weight on logging until acct and whowatch are investigated to serve
+	the purpose of documenting steps taken when editing a build.
+	(though figuring out how to create the wrapper functions for all events should be a great fucking exercise.)
+
+
+3) Configs that to be out of the box:
+		AIDE
+		Snort
+		OpenSSH
+		DNSSEC
+		v
+
+4) Pick an http server, install that bitch with a site running.
+
+5) Branding. Don't be tech, be a hipster. Swear a lot.
+
+6) Random ssh ports.
+
+7) DNS check, by inquiring multiple servers in different regions, using basic 
+	statistics to determine what's good.
+

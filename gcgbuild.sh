@@ -297,7 +297,7 @@ version_string="$(printf "%s.%s.%s" "${version[@]}")"
 ## Mount, Edit, and Build vars
 root_mount_dir="$root_mount_dir/$project_name"
 base_mount_dir="$root_mount_dir/base"
-base_image_fs="$base_mount_dir/casper/filesystem.squashfs"
+base_image_fs=""
 fs_mount_dir="$root_mount_dir/fs"
 edit_mount_dir="$root_mount_dir/edit"
 build_mount_dir="$root_mount_dir/build"
@@ -313,6 +313,8 @@ custom_image="$project_name-$version_string.iso"
 
 setup_logging_framework() {
     if [ -d "/var/log/gcg" ]; then
+        echo "Logging isn't implemented."
+    fi
         ## look for project name.
         ## increment session id.
         ## create new session folder.
@@ -453,6 +455,11 @@ mount_base_image() {
         mount --verbose -o loop $base_image $base_mount_dir
         echo "Finished mounting base image at $base_mount_dir.."
     fi
+}
+
+locate_image_squashfs() {
+    base_image_fs="$(find $base_mount_dir -name "*filesystem.squashfs" -exec echo "{}" \;)"
+    echo "$base_image_fs"
 }
 
 init_build_image() {
@@ -763,6 +770,8 @@ load_edit_image() {
     create_mount_directories
     mount_base_image
     init_build_image
+    locate_image_squashfs
+    exit
     mount_fs
     create_edit_fs
 }
