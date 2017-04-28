@@ -459,21 +459,22 @@ mount_base_image() {
 
 locate_image_squashfs() {
     base_image_fs="$(find $base_mount_dir -name "*filesystem.squashfs" -exec echo "{}" \;)"
-    echo "$base_image_fs"
+    base_mount_fs=${base_image_fs:$((${#base_mount_dir})):$((${#base_image_fs}))}
+    echo "$base_mount_fs"
 }
 
 init_build_image() {
     if [ "$verbose" == "event" ]; then
-        rsync --quiet --archive --exclude=/casper/filesystem.squashfs $base_mount_dir/ $build_mount_dir    
+        rsync --quiet --archive --exclude=$base_mount_fs $base_mount_dir/ $build_mount_dir    
     fi
     if [ "$verbose" == "info" ]; then
         echo "Initializing build image..";
-        rsync --archive --exclude=/casper/filesystem.squashfs $base_mount_dir/ $build_mount_dir
+        rsync --archive --exclude=$base_mount_fs $base_mount_dir/ $build_mount_dir
         echo "Finished initializing build image.."
     fi
     if [ "$verbose" == "debug" ]; then
         echo "Initializing build image..";
-        rsync --archive --verbose --exclude=/casper/filesystem.squashfs $base_mount_dir/ $build_mount_dir 
+        rsync --archive --verbose --exclude=$base_mount_fs $base_mount_dir/ $build_mount_dir 
         echo "Finished initializing build image.."
     fi
 }
@@ -771,7 +772,6 @@ load_edit_image() {
     mount_base_image
     init_build_image
     locate_image_squashfs
-    exit
     mount_fs
     create_edit_fs
 }
