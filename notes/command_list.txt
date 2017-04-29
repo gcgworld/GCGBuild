@@ -21,7 +21,9 @@ lspci
 ckbcomp
 dumpkeys
 loadkeys
-
+setarch
+setpci
+taskset
 
 BOOT:
 bootctl ~> Maybe could free the Mac
@@ -40,7 +42,7 @@ modprobe
 modinfo
 delpart
 getkeycodes
-
+setkeycodes
 
 (init)
 lsinitramfs
@@ -73,6 +75,15 @@ ipcs ~> get info on IPC Shischz
 lsipc
 lockfile
 mkfifo
+ncat
+ndiff
+nsenter
+sar
+sadf
+timeout
+tload
+unshare
+volatility
 
 
 FILE SYSTEM & USB DRIVES
@@ -88,6 +99,7 @@ blkls
 blkstat
 bulk_extractor
 chattr
+chacl
 chcon
 delpart
 testdisk
@@ -106,6 +118,7 @@ lsattr ~> list extended attrs on ext2
 lslocks
 lsns ~> list namespaces?
 lsx ~> list all the executables.. duh.
+lpinfo
 devdump
 isovfy
 isoinfo
@@ -117,12 +130,28 @@ free
 mmls
 mmcat ~> output a partitions contents to stdout.. (like dd?)
 mmstat
+namei
+partx
+quotactl
+setfacl
+setfattr
+truncate ~> shrink or stretch the file size.
+udisks
+udisksctl
+usb-devices
+volname ~> ~# volname /dev/sdX ~> $UUID || Mediadrive || whatever
+xxd ~> *reverse hexdump.
+
+
+#Devices
+
 
 PARSING+CHANGING BINARIES:
 gdb
 readelf
 gold
 dwarfdump
+objcopy
 objdump
 dissy ~> graphical frontend for objdump
 edb
@@ -163,7 +192,7 @@ icat ~> cat file by inode instead of name
 iconv ~> conert text between character encondings
 ils ~> list inode info
 instmodsh???
-
+sdiff
 
 
 USERSPACE
@@ -178,19 +207,12 @@ composite ~> overlaps one image over another.
 dcparse ~> pull CIFF/TIFF data from thumbnail.
 dcraw ~> decoder for raw images.
 
-
-ANALYSIS
-dot ~> draw directed graphs (maybe use it for the whole single point-of-knowledge branch out idea)
-gc ~> count graph components
-gprof
-gvgen
-
-
 CONFUSION
 h2ph + h2xs
 
 
 NETWORKING
+**look into packetforge-ng for nyms
 Networking tools really fall into 4 categories. Monitors, probes, filters, and hooks.
 probes try to become hooks => monitors become filters
 dmitry ~> get all of the info.
@@ -206,11 +228,25 @@ glances ~> A lot of info in small space. concise overall summary
 nmon ~> cpu, mem, net, fs, ps ~> .csv
 inetsim
 fping ~> wrap the world in a shitty ping blanket
+netsed
+ngrep
+tcpflow ~> record whole TCP sessions rather than unsequenced packets
+tcpprep ~> create a replay cache.... and probably replay it.
+tcpreplay ~> just what it sounds like, take a pcap and play it back.
+tcpreplay-edit
+tcprewrite ~> rewrite packets in a pcap.
+tshark
+unicornscan
+whatweb
+yersinia ~> *anything to fuck off layer 2 to figure out where that network is.
+arping
+arpwatch
 
 
 TUNNELS
 dns2tcpc
 fragroute
+tcp-bridge
 tcpwatch-httpproxy
 
 

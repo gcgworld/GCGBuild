@@ -1,8 +1,18 @@
 #!/bin/bash
 
+intro_screen() {
+    cat << EOF
+
 ##############################################
 ## Gangster Computer God Linux Build System ##
+##                                          ##
+##                                          ##
+##                                          ##
 ##############################################
+
+EOF
+}
+
 
 show_help() {
     cat << EOF

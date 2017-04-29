@@ -68,3 +68,4 @@ Functions in bash can take parameters, unless you them in as variables.
 7) DNS check, by inquiring multiple servers in different regions, using basic 
 	statistics to determine what's good.
 
+**) Build a Debian package out of it.
