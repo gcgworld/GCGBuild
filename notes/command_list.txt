@@ -11,8 +11,21 @@ XZ compression algorithm
 ~$ tar -cJf archive.tar.xz /path/to/files/*
 
 
+console voodoo
+man console_codes
+man charsets
+man console_ioctl
+man kbd_mode
+man setmetamode
+
+
+
+
+
+
 
 HARDWARE:
+**mt = magnetic tape**
 lshw
 lscpu
 lspci
@@ -20,6 +33,7 @@ lspci
 /proc/meminfo
 ckbcomp
 dumpkeys
+getkeycodes
 loadkeys
 setarch
 setpci
@@ -50,6 +64,9 @@ busctl ~> monitor dbus
 gdbus
 
 getconf
+sysconf
+pathconf
+confstr
 env
 
 MEMORY+PROCESSES
