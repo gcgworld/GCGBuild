@@ -13,8 +13,17 @@ a1)deepkg-cleaning and install are one thing now.
 
 ###DONE###
 1b) functions can take fucking parameters.
+	the mechanism to accomplish this is as follows:
+		-1) Write the script in such a way that it can call itself back
+		0) Depending on the arguments, the script will know where it
+				is in it's exection cycle.
+		1) collect the parameters into variables.
+		2) recall the script with the variables as parameters.
+		3) enjoy being able to pass parameters into functions in Bash.
 	a) verbosity and logging are now parameters that get fed into every
 		function and not 6-9 extra lines of code in a function.
+
+
 ###DONE###
 Functions in bash can take parameters, unless you them in as variables.
 
@@ -31,20 +40,37 @@ Functions in bash can take parameters, unless you them in as variables.
 ###DONE###
 
 
-1e) Go back through CIS hardening guide and make sure you've got those bases covered. (This is gcglines)
 
 
+1e) Go back through CIS hardening guide and make sure you've got those bases covered.
+(This falls under the purview of gcglines with jailpurse as the delivery mechanism.)
+Keep in mind that check list security is pretty much bullshit. It gives you a false
+sense that you covered your bases, there are however for most common use services, (i.e.
+databases, servers, any thing that opens a port and talks to other computers..)
+fundamental setup regiments that everyone knows. These basic security steps, like changing
+the mysql root password, should be fucking automatic already. Ideally, there should
+be no point in time when the computer is setting up a service that connects to 
+other computers, while connected to the internet.
 
+
+###IN PROGRESS
 1f) Identify all of the branding spots. Change the uname lsb_release, etc.. (gcglines)
+###NOTE:
+### 	This process has expanded into removing the ubuntu root-kit to add the GIO server.
+###		LTMS, Apport, and whatever else we find objectionable in there. If it turns out to
+###		load the signed EFI and we are going to have to recreate signatures for everything.
+###		This might actually be good practice, but it seems like it would be tedious too.
 
 
-
+###IN PROGRESS
 1h) Find installation script and set the partitions to the correct permissions 
 	as laid out in the CIS guide.
+
 
 1i) LXC support for virtual machines. (Is LXC still a working standard?) (gcglines)
 
 
+###I TRIED BUT ITS IN PROGRESS
 2) Put no weight on logging until acct and whowatch are investigated to serve
 	the purpose of documenting steps taken when editing a build.
 	(though figuring out how to create the wrapper functions for all events should be a great fucking exercise.)

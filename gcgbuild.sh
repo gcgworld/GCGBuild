@@ -88,7 +88,7 @@ show_help() {
 
 
         -o, --output-target:
-            Default: "\e[4m/gcgbuild/images/custom\e0m"
+            Default: "e[4m/gcgbuild/images/custom\e0m"
 
             Choose destination to write custom image
             after it has been built.
@@ -149,8 +149,6 @@ root_mount_dir="/mnt"
 
 ## Default Jailpurse vars
 jailpurse="enabled"
-host_jailpurse=$gcg_build_dir/jailpurse
-guest_jailpurse=$edit_mount_dir/root/jailpurse
 
 ## Logging vars
 log_level="none"
@@ -254,8 +252,12 @@ do
             shift
             if [ -d "$1" ]; then
                 custom_image_dir="$1"
+                echo "$custom_image_dir"
+                echo "custom_image_dir is $(pwd)"
             else
-                mkdir -p "$1"
+                echo "custom_image_dir is $1"
+                mkdir -p -v "$1"
+                echo "custom_image_dir is$(pwd)"
                 if [ -d "$1" ]; then
                     custom_image_dir="$1"
                 else
@@ -311,6 +313,9 @@ base_image_fs=""
 fs_mount_dir="$root_mount_dir/fs"
 edit_mount_dir="$root_mount_dir/edit"
 build_mount_dir="$root_mount_dir/build"
+
+host_jailpurse=$gcg_build_dir/jailpurse
+guest_jailpurse=$edit_mount_dir/root/jailpurse
 
 edit_mount_proc=$edit_mount_dir/proc
 edit_mount_sys=$edit_mount_dir/sys
@@ -582,7 +587,7 @@ smuggle_in() {
         if [ "$verbose" == "debug" ]; then
             echo "Copying scripts to guest system.."
             mkdir --verbose $edit_mount_dir/root/jailpurse
-            cp -R $host_jailpurse/* $guest_jailpurse
+            cp -R $host_jailpurse/* $guest_jailpurse/
             echo "Finished copying scripts into guest system.."
         fi
     else
@@ -647,6 +652,18 @@ enter_edit_image() {
     echo "You have exited the guest.."
 }
 
+package_variables() {
+    # echo "Wrapping variable"
+    _var_pass_wrapper=( )
+    echo "${_var_pass_wrapper[@]}"
+}
+
+start_gcg_lines() {
+    echo "Starting GCGLines.."
+    ${path_to_gcglines} $(package_variables)
+    echo "Re-entering GCGBuild.."
+}
+
 write_new_image_manifest() {
     ## Write new image manifest and write it to your change log.
     if [ "$verbose" == "event" ]; then
@@ -657,7 +674,7 @@ write_new_image_manifest() {
     if [ "$verbose" == "info" ]; then
         echo "Creating package manifest for new image.."
         chmod +w $build_mount_dir/casper/filesystem.manifest
-        chroot $edit_mount_dir dpkg-query -W --showformat='${Package} ${Version}\n' > $build_mount_dir/casper/filesystem.manifest
+        chroot dpkg-query -W --showformat='${Package} ${Version}\n' > $build_mount_dir/casper/filesystem.manifest
         cp $build_mount_dir/casper/filesystem.manifest $build_mount_dir/casper/filesystem.manifest-$project_name
         echo "Finished package manifest for new image.."
     fi
@@ -690,42 +707,63 @@ build_new_image_fs() {
 generate_new_image_checksums() {
     ## Create list of new list checksums from file.manifest
     if [ "$verbose" == "event" ]; then
-        rm $build_mount_dir/md5sum.txt $/build_mount_dir
-        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt
+        rm $build_mount_dir/md5sum.txt
+        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt && cd -
     fi
     if [ "$verbose" == "info" ]; then
         echo "Deleting old image checksum.."
         rm $build_mount_dir/md5sum.txt
         echo "Generating new image checksum.."
-        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt
+        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum > sha256sum.txt && cd -
         echo "New file system checksums have been generated.."        
     fi
     if [ "$verbose" == "debug" ]; then
         echo "Deleting old image checksum.."
         rm --verbose $build_mount_dir/md5sum.txt
         echo "Generating new image checksum.."
-        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum | tee sha256sum.txt
+        cd $build_mount_dir && find . -type f -print0 | xargs -0 sha256sum | tee sha256sum.txt && cd -
         echo "New file system checksums have been generated.."
     fi
 }
 
 generate_new_iso() {
+    ## genisoimage options
+    ## -r ~> sets more reasonable permissions than some other options.
+    ## -V ~> sets VolumeID to be written to the master block. 32-char max.
+    ## -boot-info-table ~> inserts a 56-byte boot information table into the 
+    ## file specified following -b with an offset of 8 bytes. This is specific
+    ## to the El-Torrito Boot Table.
+    ## -c isolinux/boot.cat ~> specifies the path and filename of the boot catalog
+    ## -cache-inodes ~> preserves hardlinks on the image when written to the new image.
+    ##      can cause problems, on windows, -no-cache-inodes is safer use with cgywin.
+    ## -J ~> generate Joliet directory records in addition to ISO9660 if you're loading on windows.
+    ## -l ~> allow full 31-char filenames.
+    ## -no-emul-boot ~> Specifies that the system should load this and exeute the image
+    ##      without performing any disk emulation.
+    ## -hard-disk-boot ~> specifies that the image is a hard disk, must begin with MBR
+    ##      that contains a single partition. (For Running from USB)
+    ## -boot-load-size ~> specifies the number of byte sectors [512 bytes] to load in
+    ##      -no-emul-boot mode.
+    ## -o /path/to/output_file.iso ~> output file destination. If none is specified goes
+    ##      to stdout, can be written to a block device, and then mounted to test that
+    ##      the image was compiled, written, and works correctly.
+    ##          
+    ## Features following prototype:
+    ## 1) -hard-disk-boot or portable OS's.
+    ## 2) Creating a block device and mounting to test the image.
+
     if [ "$verbose" == "event" ]; then
-        genisoimage -r -V "$NAME_OF_DISTRO$VERSION" -b isolinux/isolinux.bin -c isolinux/boot.cat \
-        -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o $custom_image_dir .
+        genisoimage -r -V "$project_name" -b isolinux/isolinux.bin -c isolinux/boot.cat -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o "$custom_image_dir/$project_name-$version_string.iso" 
     fi
-    if [ "$verbose" == "info" ]; then
-        echo "Building $project_name$version.iso.."
-        genisoimage -r -V "$project_name$version" -b isolinux/isolinux.bin -c isolinux/boot.cat \
-        -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o $custom_image_dir .
+    if  "$verbose" == "info" ]; then
+        echo "Building $project_name-$version.iso.."
+        genisoimage -r -V "$project_name$version_string" -b isolinux/isolinux.bin -c isolinux/boot.cat -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o "$custom_image_dir/$project_name-$version_string.iso"
         echo "Finished building $project_name$version.iso.."
     fi
     if [ "$verbose" == "debug" ]; then
-        echo "Building $project_name$version.iso.."
-        genisoimage -r -V "$project_name$version" -b isolinux/isolinux.bin -c isolinux/boot.cat \
-        -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -boot-info-table -o \
-        $custom_image_dir/$project_name$version .
-        echo "Finished building $project_name$version.iso.."
+        echo "Building $project_name-$version.iso.."
+        genisoimage -r -V "$project_name$version_string" -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -cache-inodes -J -l -no-emul-boot -boot-load-size 4 -o "$custom_image_dir/$project_name-$version_string.iso"
+        echo "Finished building $project_name$version.iso"
     fi
 }
 
@@ -734,18 +772,9 @@ clean_up_image() {
     ##     cp -R $edit_mount_dir/var/log/gcg/session/* /var/log/gcg/session/image/
     ##     rm -rf $edit_mount_dir/var/log/gcg
     ## fi
-    apt-get clean
-    if [ -d $guest_jailpurse ]; then
-        rm -rf $guest_jailpurse
-    fi
-    if [ "$(cat /etc/mtab | grep "$edit_mount_proc")" != "" ]; then
-        umount "$edit_mount_proc"
-    fi
-    if [ "$(cat /etc/mtab | grep "$edit_mount_sys")" != "" ]; then
-        umount "$edit_mount_sys"
-    fi
-    rm -rf $edit_mount_dir/tmp/* 2>/dev/null
-    rm -rf $edit_mount_dir/tmp/.* 2>/dev/null
+    echo "Cleaning up image.."
+    chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-clean.sh"
+    echo "Finished cleaning image.."
 }
 
 clean_up_host() {
@@ -789,6 +818,7 @@ decision() {
     echo "[5] Discard your changes and work on another project."
     echo "[6] Discard changes and quit."
     echo "[7] View the User manual."
+    echo "[8] Customize the installer. (Requires GCGLines)"
     echo "[Q]uit"
     read decision
 
@@ -801,7 +831,7 @@ decision() {
     fi
     if [ "$decision" == "2" ]; then
         save_image
-        quit_gcgbuild
+        exit
     fi
     if [ "$decision" == "3" ]; then
         view_logs
@@ -865,7 +895,6 @@ save_image() {
     build_new_image_fs
     generate_new_image_checksums
     generate_new_iso
-    clean_up_host
 }
 
 quit_gcgbuild() {

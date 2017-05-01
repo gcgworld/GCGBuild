@@ -10,10 +10,10 @@ if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
     mount --verbose -t proc none /proc/
     mount --verbose -t sysfs none /sys/
 
+    
     ## Setup Your Environment
-    cp /root/jailpurse/profile /etc/profile
-    cp /root/jailpurse/.bashrc /root/.bashrc
-    cp /root/jailpurse/.bash_aliases /etc/.bash_aliases
+    cp /root/jailpurse/config-scripts/bash-profile/.* /root/ &&
+    source /root/.profile
     
 
     ## Setup Logs

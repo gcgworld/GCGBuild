@@ -22,6 +22,7 @@ parse_args() {
 			deb_pkg="$(find . -name '*"${instruction[1]}"*' -exec echo "{}" \;)"
 			action='dpkg -i "$deb_pkg"'
 			unset deb_pkg
+			;;
 		dpurge
 			action='dpkg -P "${instruction[1]}"'
 			;;
@@ -63,4 +64,19 @@ iter_through_pkg_lists
 
 # }
 
+# package_verification() {
+
+# }
+
+# source_verification() {
+
+# }
+
+# source_build() {
+
+# }
+
+# source_install() {
+	
+# }
 IFS=$OIFS

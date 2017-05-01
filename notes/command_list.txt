@@ -49,6 +49,7 @@ vboot
 geteltorito
 
 
+
 KERNEL+SYSTEM SERVICES
 lsmod
 rmmod
@@ -57,6 +58,7 @@ modinfo
 delpart
 getkeycodes
 setkeycodes
+acpid ~> notify userspace of power events.
 
 (init)
 lsinitramfs
@@ -83,7 +85,7 @@ valgrind ~> fuzz an executable for memory leaks
 chrt ~> manipulate the real-time attributes of a process
 fixproc
 ps
-gcore
+gcore ~> gcore -o dumpfile.ext $TARGET_PID
 ionice
 iostat
 ipcmk ~> create IPC resources/connections
@@ -101,6 +103,7 @@ timeout
 tload
 unshare
 volatility
+inotify ~> monitor changes in file
 
 
 FILE SYSTEM & USB DRIVES
@@ -135,11 +138,11 @@ lsattr ~> list extended attrs on ext2
 lslocks
 lsns ~> list namespaces?
 lsx ~> list all the executables.. duh.
-lpinfo
+lpinfo ~> list available devices and drivers to CUPS server.
 devdump
 isovfy
-isoinfo
-isodump
+isoinfo ~> isoinfo -( f || l ) -i /path/to/iso ## isoinfo -d /path/to/iso
+isodump ~> 
 genisoimage
 fiwalk
 magicrescue
@@ -158,14 +161,16 @@ udisksctl
 usb-devices
 volname ~> ~# volname /dev/sdX ~> $UUID || Mediadrive || whatever
 xxd ~> *reverse hexdump.
+fuse ~> File system in USEr space.
+
 
 
 #Devices
 
 
 PARSING+CHANGING BINARIES:
-gdb
-readelf
+gdb ~> gdb -p $TARGET_PID ## debug a running process.
+readelf ~> readelf -a $TARGET_FILE | less ## readelf -
 gold
 dwarfdump
 objcopy
@@ -176,7 +181,9 @@ elfedit
 hexdump
 hexedit
 bcmp ~> compare byte sequences.
-ldd ~> print .so dependencies
+ldd ~> print .so dependencies ## safer is ( objdump -p /path/to/lib | grep NEEDED )
+
+
 
 
 FILE UTILS
@@ -312,6 +319,13 @@ netstat
 
 
 
+## return file descriptors of all running processes.
+for i in $(ps -ea -o pid,cmd)
+do
+	pid="$(echo $i | grep -oP "^ \d+" | grep -oP "\d+")"
+	echo "$i"
+	ls -lia /proc/$pid/fd
+done
 
 
 
@@ -323,4 +337,11 @@ netstat
 
 	
 
+### The gvfsd locks.
+
+/var/lib/alsa/asound.state.lock 		## Note that Alsa isn't installed.
+
+/etc/.pwd.lock
+
+/run/network/.ifstate.lock 
 
