@@ -1,14 +1,15 @@
 #!/bin/bash
+session_start="$(date)"
 
 intro_screen() {
-    cat << EOF
-
-##############################################
-## Gangster Computer God Linux Build System ##
-##                                          ##
-##                                          ##
-##                                          ##
-##############################################
+cat << EOF
+###############################################
+## Gangster Computer God Linux Build System  ##
+## AUTHOR: Gabriel Schroder                  ##
+## All opinions represented here are my own  ##
+## and not my employers. I don't have a job. ##
+## Which is the only reason this now exists. ##
+###############################################
 
 EOF
 }
@@ -18,6 +19,28 @@ show_help() {
     cat << EOF
     Usage: gcgbuild.sh [-options] [-b BASE_IMAGE]
     Options:
+        -a, --activate-mount:
+            Default: activated="disabled"    
+
+            Mount the /proc and /sys
+            pseudo-devices. To run the 
+            OS, while you make changes.
+
+            example: gcgbuild -a -n -b images/base/your_base.iso
+
+
+        -A, --archive: "Project Name" "version number"
+            ## Not yet implemented.
+            Default: "project=this sessions project"
+                     "version=current_version"
+
+            Save an archive of your Project at
+            a specific version.
+
+            example: gcgbuild -A GCGLinux 0.1.1
+                     gcgbuild --archive GCGLinux 0.1.1
+
+
         -b, --base-image: $(echo -e "\e[4m/path/to/base_image.iso\e[0m")
 
             Choose image to edit.
@@ -25,9 +48,16 @@ show_help() {
             example: gcgbuild -b images/base/ubuntu-desktop-14.04.05.iso
 
 
+        -C, --clear-logs: "Project Name"
+            ## Not yet implemented.
+            Default: None. Must have argument.
+
+            Deletes all logs in /var/log/gcg/<Project_Name>
+
+
         -h, --help: Show this message and exit.
-        
-        
+
+
         -l, --log-dir: $(echo -e "\e[4m/path/to/log/dir\e[0m")
             Default: $(echo -e "\e[4m/var/log/gcg\e[0m")
         
@@ -73,15 +103,15 @@ show_help() {
 
 
         -N, --no-jailpurse:
-            Default: jailpurse=enabled
+            Default: "jailpurse=enabled"
 
             Do not copy the jailpurse tool
             folder into the guest system.
             Work with the raw image.
 
-            Note: This inherently disables gcg
-                  logging while editing the 
-                  image.
+            Note: You can still copy
+                  files into the system
+                  manually.
 
             Example: gcgbuild -N
                      gcgbuild --no-jailpurse
@@ -135,7 +165,7 @@ EOF
 ## to declare variables. Defaults.
 
 ## Default project name.
-project_name="GCGLinux"
+project_name="$USERLinux"
 
 ## Default image to load.
 gcg_build_dir=$(dirname $(readlink -f $0))
@@ -155,6 +185,8 @@ log_level="none"
 host_log_dir=/var/log/gcg
 guest_log_dir=/var/log/gcg
 
+## Active OS
+active="disabled"
 ## Networking vars
 networking="enabled"
 
@@ -168,6 +200,9 @@ image_host=false  ## The how TBD
 while [ "$1" ]
 do
     case $1 in
+        -a|--activate-mount)
+            active="enabled"
+            ;;
         -b|--base-image)
             shift
             if [ -f $1 ] && [ "$(file -b $1 | grep -oP '^\w+\s+\w+')" == "ISO 9660" ]; then
@@ -302,7 +337,6 @@ do
 done
 
 ## Project custom vars
-
 version=( 0 0 1 )
 version_string="$(printf "%s.%s.%s" "${version[@]}")"
 
@@ -347,14 +381,6 @@ setup_logging_session() {
     echo "create /var/log/gcg/$profile/session_id"
     echo "create the subsidiary folders we decide on."
 
-}
-
-logging_wrapper_function() {
-    # if verbose is off but log-level is high,
-    # change the verbosity back to high
-    # and run all functions in this wrapper
-    # which will forward all stdout to /var/log/gcg/$profile/Session_id/init-log or whatever
-    echo "We are going to use variables to pass parameters."
 }
 
 strip_trailing_dir_slash() {
@@ -548,30 +574,6 @@ create_edit_fs() {
     fi
 }
 
-snapshot_edit_image() {
-    if [ "$log_level" != "none" ]; then
-        if [ -f /var/log/gcg/$project_name/$session_id/init-fs-snapshot.txt ]; then
-            chroot $edit_mount_dir /bin/bash -c \
-            "su - -c mkdir -p /var/log/gcg && \
-            find . -type f -print0 | xargs -0 sha512sum > /var/log/gcg/end-fs-snapshot.txt && \
-            find / >> /var/log/gcg/end-fs-tree.txt"
-            cp $edit_mount_dir/var/log/gcg/end-fs-snapshot.txt /var/log/gcg/$project_name/$session_id/end-state/
-            cp $edit_mount_dir/var/log/gcg/end-fs-tree.txt /var/log/gcg/$project_name/$session_id/end-state/
-            sed -i '/\/var\/log\/gcg/d' /var/log/gcg/end-fs-snapshot.txt
-            sed -i '/gcg/d' /var/log/gcg/end-fs-tree.txt
-        else    
-            chroot $edit_mount_dir /bin/bash -c \
-            "su - -c mkdir -p /var/log/gcg && \
-            find . -type f -print0 | xargs -0 sha512sum > /var/log/gcg/init-fs-snapshot.txt && \
-            find / >> /var/log/gcg/init-fs-tree.txt"
-            cp $edit_mount_dir/var/log/gcg/init-fs-snapshot.txt /var/log/gcg/$project_name/$session_id/init-state/
-            cp $edit_mount_dir/var/log/gcg/fs-tree.txt /var/log/gcg/$project_name/$session_id/init-state/
-            sed -i '/\/that\/test\/path/d' /var/log/gcg/init-fs-snapshot.txt
-            sed -i '/gcg/d' /var/log/gcg/fs-tree.txt
-        fi
-    fi
-}
-
 smuggle_in() {
     if [ "$jailpurse" == "enabled" ]; then
         if [ "$verbose" == "event" ]; then
@@ -619,16 +621,16 @@ setup_guest_networking() {
 setup_guest_internals() {
     if [ "$jailpurse" == "enabled" ]; then
         if [ "$verbose" == "event" ]; then
-            chroot $edit_mount_dir bash -c /root/jailpurse/gcg-edit-init.sh
+            chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-init.sh $activated" 
         fi
         if [ "$verbose" == "info" ]; then
             echo "Running setup scripts in guest system.."
-            chroot $edit_mount_dir bash -c /root/jailpurse/gcg-edit-init.sh
+            chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-init.sh $activated"
             echo "Guest setup is complete.."
         fi
         if [ "$verbose" == "debug" ]; then
             echo "Running setup scripts in guest system.."
-            chroot $edit_mount_dir bash -c /root/jailpurse/gcg-edit-init.sh
+            chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-init.sh $activated"
             echo "Guest setup is complete.."
         fi
     fi
@@ -773,7 +775,7 @@ clean_up_image() {
     ##     rm -rf $edit_mount_dir/var/log/gcg
     ## fi
     echo "Cleaning up image.."
-    chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-clean.sh"
+    chroot $edit_mount_dir bash -c "/root/jailpurse/gcg-edit-clean.sh $active"
     echo "Finished cleaning image.."
 }
 
