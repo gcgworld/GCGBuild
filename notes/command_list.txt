@@ -4,11 +4,34 @@ command_list.txt
 while [ "$break" != "0" ]; do number=$(( $RANDOM * 2 )); if [ 1040 -lt $number -a $number -lt 65535 ]; then echo $number; break=0; fi; done; unset break; unset number;
 4894
 
+## list all of the printable strings in binary files
+for f in $(find /)
+do
+	([ -b $f ] && strings $f) || false
+done
 
-Create a tar.xz archive:
-Tar combines/concatenates files into one.
-XZ compression algorithm
+
+## skip to a byte with dd
+dd if=/your/input/file of=/your/output/file bs=1 skip=$(byte you would like to start at.)
+
+## scan files for magic numbers in odd spots ~> dd if=$f of=$outf bs=1 skip=byte at which 
+## magic number begins.
+
+## initrd & initramfs files
+## stat for file type, compare against mimetype if you're really not sure.
+cp initramfs.blah.blah.img initramfs.blah.blah.img.gz
+mv initramfs.blah.blah.img initramfs.the_original_one.img
+gzip -dk --suffix initramfs.blah.blah.img.gz
+
+xz -dk --suffix=.lz initrd.lz  ## ~> ./initrd
+cpio -i < initrd
+
+## Create a tar.xz archive:
+## Tar combines/concatenates files into one.
+## XZ compression algorithm
 ~$ tar -cJf archive.tar.xz /path/to/files/*
+
+
 
 
 console voodoo

@@ -4,18 +4,19 @@
 
 ## Check to make sure we are in the chroot context.
 if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
-    echo "Finishing establishing the Edit Context."
-
-    ## Mount pseudo-filesystems
-    mount --verbose -t proc none /proc/
-    mount --verbose -t sysfs none /sys/
-
     
+    
+    echo "Finishing establishing the Edit Context."
+    ## Mount pseudo-filesystems
+    if [ "$1" == 'enabled' ]; then
+        mount --verbose -t proc none /proc/
+        mount --verbose -t sysfs none /sys/
+    fi
+
     ## Setup Your Environment
-    cp /root/jailpurse/config-scripts/bash-profile/.* /root/ &&
+    cp /root/jailpurse/config-scripts/confs/bash-profile/.* /root/ &&
     source /root/.profile
     
-
     ## Setup Logs
         ## List of commands issued.
     mkdir -p /var/log/gcg/commands

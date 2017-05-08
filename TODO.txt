@@ -7,8 +7,12 @@ The boot order for Linux on metal generally goes:
 		2. Bootstrap Loader
 		3. BIOS
 		4. CMOS Setup
+		#) Automatic lookup for correct version over secure channel.
+				Verify with hashes, pgp sigs, check against existing.
+
 	2. MBR
 		1. boot.img (512kb file)
+		
 	3. GRUB
 		1. core.img
 		2a. initrd (init RAM Disk) loaded into RAM

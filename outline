@@ -1,3 +1,32 @@
+
+0) Create partition with tmpfs and proper permissions to isolate the
+	guest/edit image env from the host. When run as root, if not
+	properly shutdown, privileges can invade host somehow. Live user
+	in guest installation becomes super user in host.
+
+0a) Convert intercom folder-share to named_pipes, then convert those
+	to sockets.
+
+	
+
+
+
+	Functions:
+		1) Error/Shutdown signal should clean-up host.
+		2) Jail purse signal should request file resources.
+		3)
+
+0b) Can GCGLines just use the build mount?
+		A) YES. AND IT SHOULD.
+		B) the ubuntu bootloader is a convoluted pile of bullshit in 14.04
+		C) Fedora's is remarkably simple
+		
+
+0c) 
+
+
+
+
 ###DONE###
 1) Write function to search for filesystem.squashfs to open it up to
 	a shit load of other distros.
@@ -25,7 +54,7 @@ a1)deepkg-cleaning and install are one thing now.
 
 
 ###DONE###
-Functions in bash can take parameters, unless you them in as variables.
+Functions in bash can't take parameters, unless you them in as variables.
 
 	b) figure out how to break the generic helper functions into a 
 		separate library. Create generic functions to help with sysadmin
@@ -40,19 +69,6 @@ Functions in bash can take parameters, unless you them in as variables.
 ###DONE###
 
 
-
-
-1e) Go back through CIS hardening guide and make sure you've got those bases covered.
-(This falls under the purview of gcglines with jailpurse as the delivery mechanism.)
-Keep in mind that check list security is pretty much bullshit. It gives you a false
-sense that you covered your bases, there are however for most common use services, (i.e.
-databases, servers, any thing that opens a port and talks to other computers..)
-fundamental setup regiments that everyone knows. These basic security steps, like changing
-the mysql root password, should be fucking automatic already. Ideally, there should
-be no point in time when the computer is setting up a service that connects to 
-other computers, while connected to the internet.
-
-
 ###IN PROGRESS
 1f) Identify all of the branding spots. Change the uname lsb_release, etc.. (gcglines)
 ###NOTE:
@@ -61,10 +77,6 @@ other computers, while connected to the internet.
 ###		load the signed EFI and we are going to have to recreate signatures for everything.
 ###		This might actually be good practice, but it seems like it would be tedious too.
 
-
-###IN PROGRESS
-1h) Find installation script and set the partitions to the correct permissions 
-	as laid out in the CIS guide.
 
 
 1i) LXC support for virtual machines. (Is LXC still a working standard?) (gcglines)
@@ -76,22 +88,52 @@ other computers, while connected to the internet.
 	(though figuring out how to create the wrapper functions for all events should be a great fucking exercise.)
 
 
+
+
+
+5) Branding. Don't be tech, be a hipster. Swear a lot.
+
+
+
+**) Build a Debian package out of it.
+
+
+
+
+
+#####################################################################################
+Currently irrelevant shit.
+
+###DONE###
 3) Configs that to be out of the box:
 		AIDE
 		Snort
 		OpenSSH
 		DNSSEC
-		v
+		
+### all of this shit is perks. the product right now is customization.
+### If people dig it, we can start giving out prefab configs.
+###DONE###
 
+
+###DONE###
 4) Pick an http server, install that bitch with a site running.
-
-
-
-5) Branding. Don't be tech, be a hipster. Swear a lot.
+### fuck this one. User can pick their own server. we can add secure
+### config later.
+### use python -m SimpleHTTPServer for web shit.
+###DONE###
 
 6) Random ssh ports.
 
 7) DNS check, by inquiring multiple servers in different regions, using basic 
 	statistics to determine what's good.
 
-**) Build a Debian package out of it.
+1e) Go back through CIS hardening guide and make sure you've got those bases covered.
+(This falls under the purview of gcglines with jailpurse as the delivery mechanism.)
+Keep in mind that check list security is pretty much bullshit. It gives you a false
+sense that you covered your bases, there are however for most common use services, (i.e.
+databases, servers, any thing that opens a port and talks to other computers..)
+fundamental setup regiments that everyone knows. These basic security steps, like changing
+the mysql root password, should be fucking automatic already. Ideally, there should
+be no point in time when the computer is setting up a service that connects to 
+other computers, while connected to the interne

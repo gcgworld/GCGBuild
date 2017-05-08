@@ -49,25 +49,25 @@ as soon as it is mounted.
 
 	A snapshot consists of:
 		The mount time of the editable image.
-		A list of all of the files coupled with:
+		A list of all of the files in the system, coupled with:
 			sha256 and sha512 sums.
 			Metadata about the files:
 				Filename
 				Size in bytes
 				Owner
 				Group
-				Access
 				Inode
 				Permissions
 				Filetype (-,c,d,b)
 				Sticky Bit
-				
-
+				Last Access
+				Last Modify
 
 		A list of the entire directory tree.
-		A list of dpkg --list
+		A list of installed packages via dpkg --list
+		A list of hard links
+		A list of soft links and their path resolutions.
 
- 
 EOF
 }
 
@@ -98,10 +98,9 @@ snapshot_edit_image() {
     fi
 }
 
-log_command_output() {
+log_commands() {
 
 	$@ >> /var/log/gcg/$session_id/events/
-	
 }
 
 log_event() {
