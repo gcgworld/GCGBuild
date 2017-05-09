@@ -2,9 +2,9 @@ BASH=/bin/bash
 BASHOPTS=cmdhist:complete_fullquote:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
 BASH_ALIASES=()
 BASH_ARGC=([0]="4")
-BASH_ARGV=([0]="1" [1]="-v" [2]="images/base/ubuntu-14.04.5-desktop-amd64.iso" [3]="-b")
+BASH_ARGV=([0]="1" [1]="-v" [2]="images/base/ubuntu-16.04.2.-server-amd64.iso" [3]="-b")
 BASH_CMDS=()
-BASH_LINENO=([0]="1146" [1]="1152" [2]="0")
+BASH_LINENO=([0]="1114" [1]="1120" [2]="0")
 BASH_SOURCE=([0]="./gcgbuild.sh" [1]="./gcgbuild.sh" [2]="./gcgbuild.sh")
 BASH_VERSINFO=([0]="4" [1]="3" [2]="11" [3]="1" [4]="release" [5]="x86_64-pc-linux-gnu")
 BASH_VERSION='4.3.11(1)-release'
@@ -63,11 +63,12 @@ XDG_VTNR=7
 _=posix
 active=disabled
 base_fs_mount_dir=/mnt/GCGLinux/fs
-base_image=images/base/ubuntu-14.04.5-desktop-amd64.iso
+base_image=images/base/ubuntu-16.04.2.-server-amd64.iso
+base_image_dir=/home/alberto/gcgbuild/images/base
 base_mount_dir=/mnt/GCGLinux/base
 build_image_dir=/mnt/GCGLinux/build
 cmd_with_args=()
-custom_image_dir=/custom
+custom_image_dir=/home/alberto/gcgbuild/images/custom/GCGLinux
 custom_image_name=GCGLinux-0.0.1.iso
 edit_fs_dev=
 edit_fs_dir=/mnt/GCGLinux/edit
@@ -80,6 +81,7 @@ gcg_build_dir=/home/alberto/gcgbuild
 gcg_lines_intercom=/intercom
 host_intercom=/home/alberto/gcgbuild/intercom
 host_jailpurse=/home/alberto/gcgbuild/jailpurse
+image_dir=/home/alberto/gcgbuild/images
 intercom=/home/alberto/gcgbuild/intercom
 jailpurse=enabled
 jailpurse_intercom=/home/alberto/gcgbuild/jailpurse/intercom
@@ -89,9 +91,8 @@ networking=disabled
 project_log_dir=/var/log/gcg/GCGLinux
 project_name=GCGLinux
 root_mount_dir=/mnt/GCGLinux
-session_start=20170508211708
-this_pid=8988
-v_arg=E
+session_start=20170509015217
+this_pid=497
 v_phrase=1
 verbose=info
 version=([0]="0" [1]="0" [2]="1")

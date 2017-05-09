@@ -19,8 +19,6 @@ if [ "$(ls -di / | grep -oP '^\d+')" -ne "2" ]; then
     cp /root/jailpurse/config-scripts/confs/bash-profile/.bashrc /root/ &&
     cp /root/jailpurse/config-scripts/confs/bash-profile/.profile /root/ &&
     source /root/.profile
-
-    echo "Image is ready to edit." 
 else
     echo "You're not in chroot jail!!!"
     echo "You can't empty the Jailpurse here!!!"
