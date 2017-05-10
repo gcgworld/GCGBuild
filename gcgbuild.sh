@@ -295,25 +295,25 @@ do
                 exit 1;
             fi
             ;;
-        -T|--TEST)
-            ## Run with default config.
-            while [ "$1" ]
-            do
-                shift
-            done
+        -T|--test-image)
+            ## Create block device and mount
+            ## image to device on save.
+            test_image_on_write=true
             ;;
     esac
     shift
 done
 
-
+## Static Program vars
+cmd_args=$BASH_ARGV
+program_start="$(date +%Y%m%d%H%M%S)"
 
 set_project_vars() {
     echo "$FUNCNAME"
     echo "Setting GCGBuild variables.."
-    ## Static Program vars
+
+    ## Static Program vars    
     gcg_build_dir=$(dirname $(readlink -f $0))
-    cmd_with_args=( $@ )
     session_start="$(date +%Y%m%d%H%M%S)"
     this_pid=$$
     log_funcs=$gcg_build_dir/logging
@@ -327,13 +327,16 @@ set_project_vars() {
     ## base_image=$gcg_build_dir/images/base/$project_name-$version.iso
     ## run normally from there! :D
 
+    ## Gotta setup logging to keep track of versioning and shit.
+    ## Keeping track of the logic in the variables is ridiciulous.
+
     ## Default project name.
-    if [ "$project_name" == "" ]; then
+    if [ ! $project_name ]; then
         project_name="GCGLinux"
     fi
 
     ## Default image to load.
-    if [ "$base_image" == "" ]; then
+    if [ ! $base_image ]; then
         base_image=$gcg_build_dir/images/base/ubuntu-minimal.iso
         base_image_dir=$(echo dirname $(readlink -f $base_image))
         image_dir=$(echo dirname $base_image_dir)
@@ -343,12 +346,12 @@ set_project_vars() {
     fi
 
     ## Default custom image write dir
-    if [ "$custom_image_dir" == "" ]; then
+    if [ ! $custom_image_dir ]; then
         custom_image_dir=$image_dir/custom/$project_name
     fi
 
     ## Default mount dirs.
-    if [ "$root_mount_dir" == "" ]; then
+    if [ ! $root_mount_dir ]; then
         root_mount_dir="/mnt/$project_name"
         base_mount_dir="$root_mount_dir/base"
         base_fs_mount_dir="$root_mount_dir/fs"
@@ -362,19 +365,19 @@ set_project_vars() {
     fi
 
     ## Default Jailpurse vars
-    if [ "$jailpurse" == "" ] || [ "$jailpurse" == "enabled" ]; then
+    if [ ! $jailpurse ] || [ "$jailpurse" == "enabled" ]; then
         jailpurse="enabled"
         host_jailpurse=$gcg_build_dir/jailpurse
         edit_fs_jailpurse=$edit_fs_dir/root/jailpurse
     fi
 
     ## Logging vars
-    if [ "$log_level" == "" ]; then
+    if [ ! $log_level ]; then
         log_level="none"
     fi
 
     ## Set default directory for logging
-    if [ "$log_dir" == "" ]; then    
+    if [ ! $log_dir ]; then    
         project_log_dir="/var/log/gcg/$project_name"
         edit_fs_log_dir=$edit_fs_dir$project_log_dir
     else
@@ -383,7 +386,7 @@ set_project_vars() {
     fi
 
     ## Should edit fs be activated with /proc /sys & /dev
-    if [ "$active" == "" ] || [ "$active" == "disabled" ]; then 
+    if [ ! $active ] || [ "$active" == "disabled" ]; then 
         active="disabled"
         edit_fs_proc=""
         edit_fs_sys=""
@@ -398,40 +401,77 @@ set_project_vars() {
     ## (requires edit fs be activated)
     ## This 
 
-    if [ "$networking" == "" ]; then
+    if [ ! $networking ]; then
         networking="disabled"
     fi
 
     ## Default verbosity
-    if [ "$verbose" == "" ]; then
+    if [ ! $verbose ]; then
         verbose="info"
         v_phrase="1"
     fi
 
     ## Default installer edit to false.
     ## Create mount-point for it if true
-    if [ "$edit_installer" == "" ]; then
+    if [ ! $edit_installer ]; then
         edit_installer="false"
     else
         if [ "$edit_installer" == "true" ]; then    
             edit_base_dir="$root_mount_dir/boot"
         fi
     fi
-
+    
     ## Project specific vars
     version=( 0 0 1 )
     version_string="$(printf "%s.%s.%s" "${version[@]}")"
-
+    custom_image_name="$project_name-$version_string.iso"
     ## Intercom
     host_intercom=$gcg_build_dir/intercom
     jailpurse_intercom=$host_jailpurse/intercom
     gcg_lines_intercom=$gcg_lines_dir/intercom
 
     ## Custom Image Title
-    custom_image_name="$project_name-$version_string.iso"
 
+    
     ## Write initial program vars to host_vars.init
-    ( set -o posix ; set ) > $host_intercom/host_vars.init
+    ( set -o posix ; set ) | $host_intercom/host_vars.init    
+}
+
+unset_project_vars() {
+    unset active
+	unset base_fs_mount_dir
+	unset base_image
+	unset base_image_dir
+	unset base_mount_dir
+	unset base_mount_fs
+	unset build_image_dir
+	unset choice
+	unset custom_image_dir
+	unset custom_image_name
+	unset edit_fs_dev
+	unset edit_fs_dir
+	unset edit_fs_jailpurse
+	unset edit_fs_log_dir
+	unset edit_fs_proc
+	unset edit_fs_sys
+	unset edit_installer
+	unset gcg_build_dir
+	unset gcg_lines_intercom
+	unset host_intercom
+	unset host_jailpurse
+	unset image_dir
+	unset image_fs
+	unset intercom
+	unset jailpurse
+	unset jailpurse_intercom
+	unset log_funcs
+	unset log_level
+	unset networking
+	unset project_log_dir
+	unset project_name
+	unset root_mount_dir
+	unset v_phrase
+	unset verbose
 }
 
 
@@ -587,6 +627,11 @@ view_logs() {
 
 ## Versioning functions
 ## Add archive_version() here.
+get_version_from_image() {
+    base_image_version=( $(echo $base_image | grep -oP "(\d+)") )
+    custom_image_version=( $(echo $custom_image_name | grep -oP "(\d+)") )
+}
+
 set_version_string() {
     echo "$FUNCNAME"
     version_string=$(printf "%s.%s.%s" "${version[@]}")
@@ -604,8 +649,22 @@ increment_version() {
         version[0]=$(( ${version[0]} + 1 ))
     fi
     set_version_string
+    custom_image_name="$project_name-$version_string.iso"
 }
 
+decrement_version() {
+    echo "$FUNCNAME"
+    if [ -z "$1" ] || [ "$1" == "minor" ]; then
+        version[2]=$(( ${version[2]} - 1 ))
+    fi
+    if [ "$1" == "mid" ]; then
+        version[1]=$(( ${version[1]} - 1 ))
+    fi
+    if [ "$1" == "major" ]; then
+        version[0]=$(( ${version[0]} - 1 ))
+    fi
+    set_version_string
+}
 
 ## Init base functions
 create_base_mount_dir() {
@@ -944,9 +1003,9 @@ delete_edit_base() {
 
 unmount_base_image() {
     echo "$FUNCNAME"
-	echo "Unmounting edit base image.."
+	echo "Unmounting base image.."
 	umount --verbose $base_mount_dir
-	echo "Finished unmounting edit base image.."
+	echo "Finished unmounting base image.."
 }
 
 delete_base_image() {
@@ -985,6 +1044,8 @@ archive_last_version() {
 change_custom_image_to_base() {
     echo "$FUNCNAME"
     echo "Copying $custom_image_name to $base_image_dir.."
+    ## way faster to create a symbolic link than actually copy
+    ## the image... Versioning has to work though.
     cp --verbose -av images/custom/$custom_image_name images/base/
     echo "Finished copying $custom_image_name to $base_image_dir.."
     echo "Switching base image to $base_image_dir/$custom_image_name.."
@@ -995,20 +1056,25 @@ change_custom_image_to_base() {
     echo "Incrementing version .."
     # rm $custom_image_dir/$custom_image_name
     increment_version
-    echo "Setting new custom image.."
-    custom_image_name="$project_name-$version_string.iso"
     echo "Custom image is now $custom_image_name.."
 }
 
 select_different_project() {
-    unset project_name
-    unset base_image
+    unset_project_vars
     echo "Project Name: "; read project_name
-    echo "Base Image: "; read base_image
+    while true 
+    do
+        echo "Base Image: "; read base_image
+        if [ "$(file -b "$base_image" | grep -oP "(ISO \w+ \w+)")" == "ISO 9660 CD" ] || \
+            [ "$(file -b "$base_image")" == "x86 boot sector" ]; then
+            break
+        fi
+    done
+    set_project_vars
 }
 
 view_manual() {
-    man gcgbuild
+    man $gcg_build_dir/docs/gcgbuild.1
     decision
 }
 
@@ -1023,8 +1089,8 @@ decision() {
     echo "[5] Discard your changes and work on another project."
     echo "[6] Discard changes and quit."
     echo "[7] Customize the installer. (Requires GCGLines)"
-    echo "[8] View the User manual."
-    echo "[9] View the logs for this session."
+    echo "[8] View the logs for this session."
+    echo "[9] View the User manual."
     echo "[Q]uit"
     read choice
 
@@ -1216,7 +1282,7 @@ quit_gcgbuild() {
 main() {
     echo "$FUNCNAME"
     intro_screen
-    set_project_vars
+    set_project_vars 
     init_session
     enter_edit_context
 }

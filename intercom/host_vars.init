@@ -4,15 +4,15 @@ BASH_ALIASES=()
 BASH_ARGC=([0]="4")
 BASH_ARGV=([0]="2" [1]="-v" [2]="images/base/ubuntu-16.04.2.-server-amd64.iso" [3]="-b")
 BASH_CMDS=()
-BASH_LINENO=([0]="1219" [1]="1224" [2]="0")
-BASH_SOURCE=([0]="./gcgbuild.sh" [1]="./gcgbuild.sh" [2]="./gcgbuild.sh")
+BASH_LINENO=([0]="1216" [1]="1004" [2]="1045" [3]="1128" [4]="1039" [5]="1128" [6]="1218" [7]="1221" [8]="0")
+BASH_SOURCE=([0]="./gcgbuild.sh" [1]="./gcgbuild.sh" [2]="./gcgbuild.sh" [3]="./gcgbuild.sh" [4]="./gcgbuild.sh" [5]="./gcgbuild.sh" [6]="./gcgbuild.sh" [7]="./gcgbuild.sh" [8]="./gcgbuild.sh")
 BASH_VERSINFO=([0]="4" [1]="3" [2]="11" [3]="1" [4]="release" [5]="x86_64-pc-linux-gnu")
 BASH_VERSION='4.3.11(1)-release'
 COLORTERM=gnome-terminal
 DIRSTACK=()
 DISPLAY=:0
 EUID=0
-FUNCNAME=([0]="set_project_vars" [1]="main" [2]="main")
+FUNCNAME=([0]="set_project_vars" [1]="main" [2]="select_different_project" [3]="decision" [4]="enter_edit_context" [5]="decision" [6]="enter_edit_context" [7]="main" [8]="main")
 GROUPS=()
 HOME=/root
 HOSTNAME=alberto
@@ -36,13 +36,14 @@ LOGNAME=root
 LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:'
 MACHTYPE=x86_64-pc-linux-gnu
 MAIL=/var/mail/root
+OLDPWD=/mnt/GCGLinux/base
 OPTERR=1
 OPTIND=1
 OSTYPE=linux-gnu
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 PIPESTATUS=([0]="0")
 POSIXLY_CORRECT=y
-PPID=2434
+PPID=19144
 PS4='+ '
 PWD=/home/alberto/gcgbuild
 SHELL=/bin/bash
@@ -66,14 +67,16 @@ base_fs_mount_dir=/mnt/GCGLinux/fs
 base_image=images/base/ubuntu-16.04.2.-server-amd64.iso
 base_image_dir=/home/alberto/gcgbuild/images/base
 base_mount_dir=/mnt/GCGLinux/base
+base_mount_fs=/mnt/GCGLinux/base/install/filesystem.squashfs
 build_image_dir=/mnt/GCGLinux/build
+choice=2
 cmd_with_args=()
 custom_image_dir=/home/alberto/gcgbuild/images/custom/GCGLinux
-custom_image_name=GCGLinux-0.0.1.iso
+custom_image_name=Tempest-0.0.1.iso
 edit_fs_dev=
 edit_fs_dir=/mnt/GCGLinux/edit
 edit_fs_jailpurse=/mnt/GCGLinux/edit/root/jailpurse
-edit_fs_log_dir=/mnt/GCGLinux/edit/var/log/gcg/GCGLinux
+edit_fs_log_dir=/mnt/GCGLinux/edit/var/log/gcg/Tempest
 edit_fs_proc=
 edit_fs_sys=
 edit_installer=false
@@ -82,17 +85,18 @@ gcg_lines_intercom=/intercom
 host_intercom=/home/alberto/gcgbuild/intercom
 host_jailpurse=/home/alberto/gcgbuild/jailpurse
 image_dir=/home/alberto/gcgbuild/images
+image_fs=/install/filesystem.squashfs
 intercom=/home/alberto/gcgbuild/intercom
 jailpurse=enabled
 jailpurse_intercom=/home/alberto/gcgbuild/jailpurse/intercom
 log_funcs=/home/alberto/gcgbuild/logging
 log_level=none
 networking=disabled
-project_log_dir=/var/log/gcg/GCGLinux
-project_name=GCGLinux
+project_log_dir=/var/log/gcg/Tempest
+project_name=Tempest
 root_mount_dir=/mnt/GCGLinux
-session_start=20170510125153
-this_pid=14566
+session_start=20170510143444
+this_pid=6213
 v_phrase=2
 verbose=debug
 version=([0]="0" [1]="0" [2]="1")

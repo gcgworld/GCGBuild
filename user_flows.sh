@@ -190,7 +190,8 @@ Program Flow:
 				decision()
 				--
 
-			# [5]
+			# [5] Discard your changes and work on another project.
+			#     !!NOT QUITE!!
 				-- clear_edit_mount
 				deactivate_edit_fs()
 				clear_edit_fs()
@@ -230,7 +231,8 @@ Program Flow:
 				decision()
 				--
 
-			# [6]
+			# [6] Discard changes and quit.
+			#     !!WORKS!!
 				-- discard_changes
 				deactivate_edit_fs()
 				clear_edit_fs()
@@ -246,16 +248,7 @@ Program Flow:
 				quit_gcgbuild()
 				--
 
-			#[7]
-				-- view_manual
-				show_man_page_menu()
-				display_man_page()
-				------------------------
-				-- loop
-				decision()
-				--
-
-			#[8]
+			# [7]
 				-- enter_gcg_lines
 				gcg_lines()
 				...
@@ -265,9 +258,19 @@ Program Flow:
 				decision()
 				--
 
-			# [9]
+			# [8]
 				-- view_logs
 				gcg_log_view()
+				------------------------
+				-- loop
+				decision()
+				--
+
+			# [9] View the User manual.
+			#     !!WORKS!!
+				-- view_manual
+				show_man_page_menu()
+				display_man_page()
 				------------------------
 				-- loop
 				decision()
