@@ -195,7 +195,7 @@ do
             if [ -d "$1" ]; then
                 log_dir="$1"
             else
-                mkdir -p "$1"
+                mkdir --verbose -p "$1"
                 if [ -d "$1" ]; then
                     log_dir="$1"
                 else
@@ -232,7 +232,7 @@ do
             if [ -d "$1" ]; then
                 root_mount_dir="$1"
             else
-                mkdir -p "$1"
+                mkdir --verbose -p "$1"
                 if [ -d "$1" ]; then
                     root_mount_dir="$1"
                 else
@@ -257,7 +257,7 @@ do
                 echo "custom_image_dir is $(pwd)"
             else
                 echo "custom_image_dir is $1"
-                mkdir -p -v "$1"
+                mkdir --verbose -p -v "$1"
                 echo "custom_image_dir is$(pwd)"
                 if [ -d "$1" ]; then
                     custom_image_dir="$1"
@@ -305,6 +305,7 @@ do
     esac
     shift
 done
+
 
 
 set_project_vars() {
@@ -412,7 +413,7 @@ set_project_vars() {
     if [ "$edit_installer" == "" ]; then
         edit_installer="false"
     else
-        if [ "$edit_installer" == "true"]; then    
+        if [ "$edit_installer" == "true" ]; then    
             edit_base_dir="$root_mount_dir/boot"
         fi
     fi
@@ -519,7 +520,7 @@ create_log_dir() {
     if [ ! -d "/var/log/gcg" ]; then
         echo "First run with logging enabled.."
         echo "Setting up root GCG log directory.."
-        mkdir -p /var/log/gcg
+        mkdir --verbose -p /var/log/gcg
         echo "Finished setting up root GCG log directory.."
     else
         echo "Root GCG log directory exists.."
@@ -531,7 +532,7 @@ create_project_log_dir() {
     if [ ! -d "$project_log_dir" ]; then
         echo "$project_name is a new project.."
         echo "Setting up $project_name log directory.."
-        mkdir -p $project_log_dir
+        mkdir --verbose -p $project_log_dir
         echo "Finished setting up $project_name log directory.."
     else
         echo "$project_name log directory exists.."
@@ -542,21 +543,21 @@ create_session_log_dirs() {
     echo "$FUNCNAME"
     echo "Setting up session log directories.."
     session_log_dir=$project_log_dir/$session_start
-    mkdir -p $session_log_dir
-    mkdir -p $session_log_dir/host
-    mkdir -p $session_log_dir/host/events
-    mkdir -p $session_log_dir/image/
-    mkdir -p $session_log_dir/image/base/snapshot
-    mkdir -p $session_log_dir/image/base_fs/snapshot
-    mkdir -p $session_log_dir/image/edit_fs/snapshots
-    mkdir -p $session_log_dir/image/edit_fs/commands
-    mkdir -p $session_log_dir/image/edit_fs/events
-    mkdir -p $session_log_dir/image/edit_fs/
-    mkdir -p $session_log_dir/image/build
+    mkdir --verbose -p $session_log_dir
+    mkdir --verbose -p $session_log_dir/host
+    mkdir --verbose -p $session_log_dir/host/events
+    mkdir --verbose -p $session_log_dir/image/
+    mkdir --verbose -p $session_log_dir/image/base/snapshot
+    mkdir --verbose -p $session_log_dir/image/base_fs/snapshot
+    mkdir --verbose -p $session_log_dir/image/edit_fs/snapshots
+    mkdir --verbose -p $session_log_dir/image/edit_fs/commands
+    mkdir --verbose -p $session_log_dir/image/edit_fs/events
+    mkdir --verbose -p $session_log_dir/image/edit_fs/
+    mkdir --verbose -p $session_log_dir/image/build
     echo "Finished setting up session log directories.."
 }
 
-init_logging_session() {
+setup_logging_session() {
     echo "$FUNCNAME"
     if [ "log_level" != "none" ]; then
         create_log_dir
@@ -565,15 +566,15 @@ init_logging_session() {
     fi
 }
 
-init_edit_fs_logging() {
+setup_edit_fs_logging() {
     if [ "$log_level" == "none" ]; then
         echo "Logging disabled: skipping config.."
     else
         echo "Setting up editable file system logging.."
-        mkdir -p $edit_fs_log_dir/
-        mkdir -p $edit_fs_log_dir/commands
-        mkdir -p $edit_fs_log_dir/files
-        mkdir -p $edit_fs_log_dir/events
+        mkdir --verbose -p $edit_fs_log_dir/
+        mkdir --verbose -p $edit_fs_log_dir/commands
+        mkdir --verbose -p $edit_fs_log_dir/files
+        mkdir --verbose -p $edit_fs_log_dir/events
         echo "Finish setting up editable file system logging.."
     fi
 }
@@ -583,6 +584,9 @@ view_logs() {
     echo "Yeah.. That's just not fancy enough..."
 }
 
+
+## Versioning functions
+## Add archive_version() here.
 set_version_string() {
     echo "$FUNCNAME"
     version_string=$(printf "%s.%s.%s" "${version[@]}")
@@ -604,20 +608,60 @@ increment_version() {
 
 
 ## Init base functions
+create_base_mount_dir() {
+    echo "$FUNCNAME"
+    echo "Creating base mount directories.."
+    mkdir --verbose -p $base_mount_dir
+    echo "Finished creating base mount directories.."
+}
+
+create_edit_base_dir() {
+    echo "$FUNCNAME"
+    echo "Creating edit base directory.."
+    mkdir --verbose -p $edit_base_dir
+    echo "Finished creating edit base mount directory.."
+}
+
+create_base_fs_mount_dir() {
+    echo "$FUNCNAME"
+    echo "Creating base file system mount directory.."
+    mkdir --verbose -p $base_fs_mount_dir
+    echo "Finished creating base file system mount directory.."
+}
+
+create_edit_fs_dir() {
+    echo "$FUNCNAME"
+    echo "Creating edit file system directory.."
+    mkdir --verbose -p $edit_fs_dir
+    echo "Finished creating edit file system directory.."
+}
+
+create_build_image_dir() {
+    echo "$FUNCNAME"
+    echo "Creating build image directory.."
+    mkdir --verbose -p $build_image_dir
+    echo "Finished creating build image directory.."
+}
+
 create_mount_dirs() {
     echo "$FUNCNAME"
     echo "Creating mount directories.."
-    mkdir -p $base_mount_dir 
-    mkdir -p $base_fs_mount_dir
-    mkdir -p $edit_fs_dir
-    mkdir -p $build_image_dir
+    create_base_mount_dir
+    create_base_fs_mount_dir
+    create_edit_fs_dir
+    create_build_image_dir
     echo "Finished creating mount directories.."
 }
 
 mount_base_image() {
     echo "$FUNCNAME"
     echo "Mounting $base_image to $base_mount_dir.."
-    mount -o loop $base_image $base_mount_dir
+    if [ -d $base_mount_dir ]; then
+        mount -o loop $base_image $base_mount_dir
+    else
+        create_base_mount_dir
+        mount -o loop $base_image $base_mount_dir
+    fi
     echo "Finished mounting $base_image at $base_mount_dir.."
 }
 
@@ -643,56 +687,70 @@ locate_base_image_squashfs() {
 mount_base_fs() {
     echo "$FUNCNAME"
     echo "Mounting file system.."
-    mount --types squashfs --options loop $base_mount_fs $base_fs_mount_dir/
+    if [ -d $base_fs_mount_dir ]; then
+        mount --types squashfs --options loop $base_mount_fs $base_fs_mount_dir/
+    else
+        create_base_fs_mount_dir
+        mount --types squashfs --options loop $base_mount_fs $base_fs_mount_dir/
+    fi
     echo "Finished mounting file system.."
 }
 
-init_edit_fs() {
+create_edit_fs() {
+    ## TODO: Account for Fedora rootfs.img
     echo "$FUNCNAME"
     echo "Creating editable file system.."
-    cp -a $base_fs_mount_dir/* $edit_fs_dir
+    if [ -d $edit_fs_dir ]; then
+        cp --verbose -a $base_fs_mount_dir/* $edit_fs_dir
+    else
+        create_edit_fs_dir
+        cp --verbose -a $base_fs_mount_dir/* $edit_fs_dir
+    fi
     echo "Editable file system ready.."
 }
 
-init_edit_base() {
+create_edit_base() {
     echo "$FUNCNAME"
     echo "Creating editable installer.."
-    cp -a $base_mount_dir/* $edit_base_dir
+    if [ -d $edit_base_dir ]; then
+        cp --verbose -a $base_mount_dir/* $edit_base_dir
+    else
+        create_edit_base_dir
+        cp --verbose -a $base_mount_dir/* $edit_base_dir
+    fi
     echo "Finished creating editable installer.." ]
 }
 
-init_build_image() {
+create_pre_build_image() {
     echo "$FUNCNAME";
-    if [ "$edit_installer" == "true" ]; then
-        echo "Initializing build image.."
-        rsync --archive --exclude=$edit_base_dir$base_image_fs $edit_base_dir/ $build_image_dir 
-        echo "Finished initializing build image.."
+    echo "Initializing build image.."
+    if [ -d $build_image_dir ]; then
+        rsync --verbose --archive --exclude=$image_fs $base_mount_dir/ $build_image_dir 
     else
-        echo "Initializing build image.."
-        rsync --archive --exclude=$image_fs $base_mount_dir/ $build_image_dir 
-        echo "Finished initializing build image.."
+        mkdir $build_image_dir
+        rsync --verbose --archive --exclude=$image_fs $base_mount_dir/ $build_image_dir 
     fi
+    echo "Finished initializing build image.."
 }
 
-init_edit_fs_networking() {
+setup_edit_fs_networking() {
     if [ "$networking" == "disabled" ]; then
         echo "Networking disabled: Skipping config.." 
     else    	
         echo "Establishing networking.."
-        cp /etc/hosts $edit_fs_dir/etc
+        cp --verbose /etc/hosts $edit_fs_dir/etc
         echo "Edit file system networking enabled.."
     fi
 }
 
 stuff_jailpurse() {
-	## Signature Fancy Bash Ternary if statement replacement.
     if [ "$jailpurse" == "disabled" ]; then
     	echo "jailpurse is disabled for this session."
         echo "external resources can still copied in manually."
     else
 	    echo "Copying scripts to edit system.."
-	    mkdir $edit_fs_jailpurse
-	    cp -R $host_jailpurse/* $edit_fs_jailpurse/
+	    mkdir --verbose $edit_fs_jailpurse
+	    cp --verbose -R $host_jailpurse/* $edit_fs_jailpurse/
 	    echo "Finished copying scripts into edit system.."
 	    echo "Running setup scripts in edit system.."
         chroot $edit_fs_dir bash -c "/root/jailpurse/gcg-edit-init.sh $active"
@@ -731,9 +789,9 @@ write_new_image_manifest() {
     if [ "$fs_manifest_file" == "filesystem.manifest" ]; then
         echo "Creating package manifest for new image.."
         fs_manifest="$(find $build_image_dir -name "$fs_manifest_file" -exec echo {} \;)"
-        chmod +w $fs_manifest
+        chmod --verbose +w $fs_manifest
         chroot $edit_fs_dir dpkg-query -W --showformat='${Package} ${Version}\n' | tee $fs_manifest
-        cp $fs_manifest $fs_manifest-$project_name
+        cp --verbose $fs_manifest $fs_manifest-$project_name
         echo "Finished package manifest for new image.."
     else
         echo "Not Debian/Ubuntu based distro"
@@ -752,11 +810,11 @@ generate_new_image_checksums() {
     echo "$FUNCNAME"
     ## Create list of new list checksums from file.manifest
     echo "Deleting old image checksum.."
-    rm $build_image_dir/md5sum.txt
+    rm --verbose $build_image_dir/md5sum.txt
     echo "Finished deleting old image checksum.."
     cwd="$(pwd)"
     echo "Generating new image checksum.."
-    cd $build_image_dir && find . -type f -print0 | xargs -0 md5sum | tee md5sum.txt && cd "$cwd"
+    cd --verbose $build_image_dir && find . -type f -print0 | xargs -0 md5sum | tee md5sum.txt && cd "$cwd"
     echo "Finished generating new image checksum.."
     unset cwd
     ## Change to a more secure hash once you have
@@ -775,13 +833,15 @@ generate_new_iso() {
     echo "Finished building $project_name-$version_string.iso .."
 }
 
+
+## Edit fs write prep fucntions.
 import_edit_fs_logs() {
     echo "$FUNCNAME"
 	if [ "$log_level" == "none" ]; then
 		echo "No session logs to clean.."
 	else
 		echo "Importing edit file system logs.."
-		cp -R $edit_fs_dir/var/log/gcg/* /var/log/gcg/$project_name/$session_id/
+		cp --verbose -R $edit_fs_dir/var/log/gcg/* /var/log/gcg/$project_name/$session_id/
 		echo "Finished importing edit file system logs.."
     fi
 }
@@ -792,7 +852,7 @@ clean_edit_fs_logs() {
 		echo "No session logs to clean.."
 	else
 		echo "Cleaning session logs on edit file system.."
-		rm -rf $edit_fs_dir$host_log_dir
+		rm --verbose -rf $edit_fs_dir$host_log_dir
 		echo "Finished cleaning session logs on edit file system.."
     fi
 }
@@ -817,66 +877,89 @@ deactivate_edit_fs() {
 		echo "Edit file system is not activated.."
 	else
 	    echo "Deactivating edit file system.."
-	    umount $edit_fs_proc
-	    umount $edit_fs_sys
-        umount $edit_fs_dev
+	    umount --verbose $edit_fs_proc
+	    umount --verbose $edit_fs_sys
+        umount --verbose $edit_fs_dev
 	    echo "Finished deactivating edit file system.."
     fi
 }
 
-delete_edit_base() {
+
+## Session disassembly functions.
+clean_edit_fs_all() {
     echo "$FUNCNAME"
-    echo "Deleting edit base image.."
-    rm -rf $edit_base_dir
-    echo "Finished deleting edit base image.."
+    echo "Cleaning files in $edit_fs_dir.."
+    rm --verbose -rf $edit_fs_dir/*
+    echo "Finished cleaning files in $edit_fs_dir.."
 }
 
 delete_edit_fs() {
     echo "$FUNCNAME"
     echo "Deleting edit file system.."
-    rm -rf $edit_fs_dir
+    rm --verbose -rf $edit_fs_dir
     echo "Finished deleting edit file system.."
+}
+
+clean_build_image_all() {
+    echo "$FUNCNAME"
+    echo "Cleaning files build image.."
+    rm --verbose -rf $build_image_dir/*
+    echo "Finished cleaning files build image.."
 }
 
 delete_build_image() {
     echo "$FUNCNAME"
     echo "Deleting build image.."
-    rm -rf $build_image_dir
+    rm --verbose -rf $build_image_dir
     echo "Finished deleting build image.."
 }
 
 unmount_base_fs() {
     echo "$FUNCNAME"
 	echo "Unmounting base file system.."
-	umount $base_fs_mount_dir
+	umount --verbose $base_fs_mount_dir
 	echo "Finished unmounting base file system file system.."
 }
 
 delete_base_fs() {
     echo "$FUNCNAME"
     echo "Deleting base file system.."
-    rm -rf $base_fs_mount_dir
+    rm --verbose -rf $base_fs_mount_dir
     echo "Finished deleting base file system.."
+}
+
+clean_edit_base_all() {
+    echo "$FUNCNAME"
+    echo "Deleting files in $edit_base_dir.."
+    rm --verbose -rf $edit_base_dir/*
+    echo "Finished deleting files in $edit_base_dir.."
+}
+
+delete_edit_base() {
+    echo "$FUNCNAME"
+    echo "Deleting edit base image.."
+    rm --verbose -rf $edit_base_dir
+    echo "Finished deleting edit base image.."
 }
 
 unmount_base_image() {
     echo "$FUNCNAME"
 	echo "Unmounting edit base image.."
-	umount $base_mount_dir
+	umount --verbose $base_mount_dir
 	echo "Finished unmounting edit base image.."
 }
 
 delete_base_image() {
     echo "$FUNCNAME"
     echo "Deleting base image.."
-    rm -rf $base_mount_dir
+    rm --verbose -rf $base_mount_dir
     echo "Finished deleting base image.."
 }
 
 delete_project_mount() {
     echo "$FUNCNAME"
     echo "Deleting project root mount directory.."
-    rm -rf $root_mount_dir
+    rm --verbose -rf $root_mount_dir
     echo "Finished deleting project root mount directory.."
 }
 
@@ -902,7 +985,7 @@ archive_last_version() {
 change_custom_image_to_base() {
     echo "$FUNCNAME"
     echo "Copying $custom_image_name to $base_image_dir.."
-    cp -av images/custom/$custom_image_name images/base/
+    cp --verbose -av images/custom/$custom_image_name images/base/
     echo "Finished copying $custom_image_name to $base_image_dir.."
     echo "Switching base image to $base_image_dir/$custom_image_name.."
     base_image=images/base/$custom_image_name
@@ -918,13 +1001,15 @@ change_custom_image_to_base() {
 }
 
 select_different_project() {
+    unset project_name
+    unset base_image
     echo "Project Name: "; read project_name
     echo "Base Image: "; read base_image
-    set_project_vars
 }
 
 view_manual() {
     man gcgbuild
+    decision
 }
 
 decision() {
@@ -953,20 +1038,16 @@ decision() {
             save_custom_build
             clear_project_mount
             change_custom_image_to_base
-	        init_base
-	        init_edit_context
-	        enter_edit_fs
-            decision
+	        init_session
+	        enter_edit_context
 	        ;;
 	    2)
 			clean_edit_fs
             save_custom_build
             clear_project_mount
             select_different_project
-            init_base
-            init_edit_context
-            enter_edit_fs
-        	decision
+            init_session
+            enter_edit_context
         	;;
         3)
 			clean_edit_fs
@@ -978,15 +1059,12 @@ decision() {
 			discard_changes
 	        init_edit_context
 	        enter_edit_context
-	        decision
 			;;
 		5)
 	        clear_project_mount
             select_different_project
-	        init_base
-	        init_edit_context
-	        enter_edit_fs
-            decision
+	        init_session
+	        enter_edit_context
 	        ;;
 	    6)
 			clear_project_mount
@@ -1011,20 +1089,40 @@ decision() {
 	esac
 }
 
+## "Super-Functions" for user flows.
+
+## Session initiation functions.
 init_base() {
     echo "$FUNCNAME"
     create_mount_dirs
     mount_base_image
+}
+
+init_base_fs() {
+    echo "$FUNCNAME"
     locate_base_image_squashfs
     mount_base_fs
 }
 
 init_edit_context() {
     echo "$FUNCNAME"
-    init_edit_fs
-    init_edit_fs_logging
-    init_edit_fs_networking
+    create_edit_fs
+    setup_edit_fs_logging
+    setup_edit_fs_networking
     stuff_jailpurse
+}
+
+init_build_image() {
+    echo "$FUNCNAME"
+    ## Add edit_base 
+    ## this for GCGLines integration.
+    create_pre_build_image
+}
+
+init_session() {
+    init_base
+    init_base_fs
+    init_edit_context
 }
 
 enter_edit_context() {
@@ -1033,15 +1131,7 @@ enter_edit_context() {
     decision
 }
 
-clean_edit_fs() {
-    echo "$FUNCNAME"
-    clean_edit_fs_apt
-    clean_edit_fs_tmp
-    import_edit_fs_logs
-    clean_edit_fs_logs
-    deactivate_edit_fs
-}
-
+## Session saving and writing functions.
 save_custom_build() {
     echo "$FUNCNAME"
     init_build_image
@@ -1051,10 +1141,24 @@ save_custom_build() {
     generate_new_iso
 }
 
+## Session dismantling functions.
+clean_edit_fs() {
+    echo "$FUNCNAME"
+    clean_edit_fs_apt
+    clean_edit_fs_tmp
+    import_edit_fs_logs
+    clean_edit_fs_logs
+    deactivate_edit_fs
+}
+
 clear_edit_fs() {
     echo "$FUNCNAME"
     deactivate_edit_fs
     delete_edit_fs
+}
+
+clear_build_image() {
+    echo "$FUNCNAME"
     delete_build_image
 }
 
@@ -1087,6 +1191,7 @@ load_new_project() {
 discard_changes() {
     echo "$FUNCNAME"
     clear_edit_fs
+    clear_build_image
 }
 
 quit_gcgbuild() {
@@ -1112,8 +1217,7 @@ main() {
     echo "$FUNCNAME"
     intro_screen
     set_project_vars
-    init_base
-    init_edit_context
+    init_session
     enter_edit_context
 }
 

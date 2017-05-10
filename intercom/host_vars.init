@@ -2,9 +2,9 @@ BASH=/bin/bash
 BASHOPTS=cmdhist:complete_fullquote:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
 BASH_ALIASES=()
 BASH_ARGC=([0]="4")
-BASH_ARGV=([0]="1" [1]="-v" [2]="images/base/ubuntu-16.04.2.-server-amd64.iso" [3]="-b")
+BASH_ARGV=([0]="2" [1]="-v" [2]="images/base/ubuntu-16.04.2.-server-amd64.iso" [3]="-b")
 BASH_CMDS=()
-BASH_LINENO=([0]="1114" [1]="1120" [2]="0")
+BASH_LINENO=([0]="1219" [1]="1224" [2]="0")
 BASH_SOURCE=([0]="./gcgbuild.sh" [1]="./gcgbuild.sh" [2]="./gcgbuild.sh")
 BASH_VERSINFO=([0]="4" [1]="3" [2]="11" [3]="1" [4]="release" [5]="x86_64-pc-linux-gnu")
 BASH_VERSION='4.3.11(1)-release'
@@ -42,7 +42,7 @@ OSTYPE=linux-gnu
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 PIPESTATUS=([0]="0")
 POSIXLY_CORRECT=y
-PPID=2709
+PPID=2434
 PS4='+ '
 PWD=/home/alberto/gcgbuild
 SHELL=/bin/bash
@@ -91,9 +91,9 @@ networking=disabled
 project_log_dir=/var/log/gcg/GCGLinux
 project_name=GCGLinux
 root_mount_dir=/mnt/GCGLinux
-session_start=20170509015217
-this_pid=497
-v_phrase=1
-verbose=info
+session_start=20170510125153
+this_pid=14566
+v_phrase=2
+verbose=debug
 version=([0]="0" [1]="0" [2]="1")
 version_string=0.0.1

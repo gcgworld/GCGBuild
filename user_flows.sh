@@ -48,40 +48,42 @@ Program Flow:
 			    			encrypt()
 
 		decision()
-			# [0]
+			# [0] Return to editing your image.
+			#     !!WORKS!!
 				-- enter_edit_context
 				enter_edit_fs()
 				------------------------
 				-- loop
 				decision()
 				--
-			# [1]
+			# [1] Save your changes to your image to the ISO and keep working.
+			#     !!WORKS!!
 				-- clean_edit_fs
 				clean_edit_fs_apt() 
+				clean_edit_fs_tmp()
 				import_edit_fs_logs()
 				clean_edit_fs_logs()
-				clean_edit_fs_tmp()
-				------------------------
-				-- save_edit_fs
 				deactivate_edit_fs()
+				------------------------
+				-- save_custom_build
+				init_build_image()
 				write_new_image_manifest()
 				build_new_image_fs()
 				generate_new_image_checksums()
 				generate_new_iso()
 				------------------------
-				-- clear_edit_mount
+				-- clear_edit_fs
 				deactivate_edit_fs()
-				clear_edit_fs()
-				clear_build_image()
+				delete_edit_fs()
+				delete_build_image()
 				------------------------
 				-- init_base
 				create_mount_dirs()
 				mount_base_image()
 				locate_image_squashfs()
-				mount_fs()
+				mount_base_fs()
 				------------------------
 				-- init_edit_context
-				init_build_image()
 				init_edit_fs()
 				init_edit_fs_logging()
 				init_edit_fs_networking()
@@ -94,7 +96,8 @@ Program Flow:
 				decision()
 				--
 
-			# [2]
+			# [2] Save your changes to your image to the ISO and work on another project.
+			#     !!WORKS!!
 				-- clean_edit_fs
 				clean_edit_fs_apt()
 				import_edit_fs_logs()
@@ -108,7 +111,7 @@ Program Flow:
 				generate_new_image_checksums()
 				generate_new_iso()
 				------------------------
-				-- clear_edit_mount
+				-- clear_edit_fs
 				deactivate_edit_fs()
 				clear_edit_fs()
 				clear_build_image()
@@ -142,7 +145,8 @@ Program Flow:
 				decision()
 				--
 
-			# [3]
+			# [3] Save your changes to your image to the ISO and quit.
+			#     !!WORKS!!
 				-- clean_edit_fs
 				clean_edit_fs_apt()
 				import_edit_fs_logs()
@@ -166,14 +170,14 @@ Program Flow:
 				quit_gcgbuild()
 				--
 
-			# [4]
+			# [4] Discard your changes and start over.
+			#     !!WORKS!!
 				-- discard changes
 				deactivate_edit_fs()
 				clear_edit_fs()
 				clear_build_image()
 				------------------------
 				-- init_edit_context
-				init_build_image()
 				init_edit_fs()
 				init_edit_fs_logging()
 				init_edit_fs_networking()
