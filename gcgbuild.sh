@@ -425,15 +425,14 @@ set_project_vars() {
     version=( 0 0 1 )
     version_string="$(printf "%s.%s.%s" "${version[@]}")"
     custom_image_name="$project_name-$version_string.iso"
+    
     ## Intercom
     host_intercom=$gcg_build_dir/intercom
     jailpurse_intercom=$host_jailpurse/intercom
     gcg_lines_intercom=$gcg_lines_dir/intercom
 
-    ## Custom Image Title
-
-    
     ## Write initial program vars to host_vars.init
+    cat /dev/null > $host_jailpurse/host_vars.init
     ( set -o posix ; set ) | $host_intercom/host_vars.init    
 }
 
