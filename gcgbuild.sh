@@ -1,10 +1,22 @@
 #!/bin/bash
+
+## GCGBuild is the file system editing
+## component of the GCGLinux system.
+
+## Omfg i cant wait to write something
+## in python after this...
+
+
+
+
+
+
 intro_screen() {
     echo "$FUNCNAME"
 cat << EOF
 ###############################################
 ## Gangster Computer God Linux Build System  ##
-## AUTHOR: Gabriel Schroder                  ##
+##        AUTHOR: Gabriel Schroder           ##
 ## All opinions represented here are my own  ##
 ## and not my employers. I don't have a job. ##
 ## Which is the only reason this now exists. ##
